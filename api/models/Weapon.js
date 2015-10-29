@@ -17,20 +17,23 @@ module.exports = {
     damage: {
       type: 'integer'
     },
+    range: {
+      type: 'integer'
+    },
     reload: {
       type: 'boolean'
     },
     oneHand: {
       type: 'boolean'
     },
-      ownersMainHand: {
-          collection: 'Character',
-          via: 'mainHand'
-      },
-      ownersOffHand: {
-          collection: 'Character',
-          via: 'offHand'
-      }
+    ownersMainHand: {
+        collection: 'Character',
+        via: 'mainHand'
+    },
+    ownersOffHand: {
+        collection: 'Character',
+        via: 'offHand'
+    }
   }
 };
 

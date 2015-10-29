@@ -29,6 +29,13 @@ module.exports = {
     },
     offHand: {
       model: 'weapon'
+    },
+    talents: {
+      collection: 'talent',
+      via: 'ownersTalent'
+    },
+    experience: {
+      type: 'integer'
     }
 
   }
