@@ -34,6 +34,9 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
+  },
+  '/topUsers': {
+    view: 'topUsers'
   }
 
   /***************************************************************************

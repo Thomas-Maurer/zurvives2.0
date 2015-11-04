@@ -13,5 +13,9 @@ module.exports.bootstrap = function(cb) {
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
+
+  console.log('Seeding database ....');
+  User.create({email: 'toto@mail.com', password: '123456', name: 'test', points: 4500}).exec(console.log);
+  User.create({email: 'titi@mail.com', password: '123456', name: 'titi', points: 9900}).exec(console.log);
   cb();
 };

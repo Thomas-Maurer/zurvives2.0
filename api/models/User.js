@@ -17,6 +17,9 @@ module.exports = {
     name: {
       type: 'string'
     },
+    points: {
+      type: 'integer'
+    },
     characters: {
       collection: 'character',
       via: 'user'
