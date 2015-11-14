@@ -17,7 +17,10 @@ var tmpPath = '.tmp/public/';
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
   'styles/**/*.css',
-  'bower_components/bootstrap/dist/css/bootstrap.css'
+  'bower_components/bootstrap/dist/css/bootstrap.css',
+  'bower_components/bootstrap-material-design/dist/css/material-fullpalette.css',
+  'bower_components/bootstrap-material-design/dist/css/ripples.css',
+  'bower_components/bootstrap-material-design/dist/css/roboto.css'
 ];
 
 
@@ -32,6 +35,8 @@ var jsFilesToInject = [
   'bower_components/angular/angular.js',
   'bower_components/angular-route/angular-route.js',
   'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+  'bower_components/bootstrap-material-design/dist/js/material.js',
+  'bower_components/bootstrap-material-design/dist/js/ripples.js',
   'bower_components/bootstrap/dist/js/boostrap.js',
 
   // Dependencies like jQuery, or Angular are brought in here
