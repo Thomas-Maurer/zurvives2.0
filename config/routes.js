@@ -39,6 +39,7 @@ module.exports.routes = {
     view: 'topUsers'
   },
   'PUT /login': 'UserController.login',
+  'GET /me': 'UserController.me',
   '/suscribe': {
     controller: 'AuthController',
     action: 'signup'

@@ -44,6 +44,22 @@ module.exports = {
       });
       return res.json(users);
     });
+  },
+  me: function(req, res) {
+    if (req.session.me !== undefined){
+      User.findOne({id: req.session.me}).exec(function (err, me){
+        if (err) {
+          return res.negotiate(err);
+        }
+        if (!me) {
+          return res.notFound('Could not find Finn, sorry.');
+        }
+        delete me.password;
+        sails.log('Found "%s"', me.email);
+        return res.json(me);
+      });
+    }
+
   }
 	
 };

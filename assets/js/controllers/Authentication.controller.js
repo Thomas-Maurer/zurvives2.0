@@ -1,11 +1,34 @@
-zurvives.controller('AuthenticationController', function($scope, $http, toastr){
+zurvives.controller('AuthenticationController', function($scope, $http, toastr, $q){
 
   $scope.loginForm = {};
   $scope.loginForm.loading = false;
   $scope.logged = false;
+  $scope.connectedUser = {};
 
-  $scope.checkiflogged = function () {
+//Load All data we need before load other function
+  $scope.init = function () {
+    var defer = $q.defer();
+    $scope.getConnectedUserInfo().then(function (data){
+      $scope.connectedUser = data;
+      $scope.logged = true;
 
+      defer.resolve(true);
+    });
+    return defer.promise;
+  };
+
+  //Return user information
+  $scope.getConnectedUserInfo = function () {
+    var defer = $q.defer();
+    $http({
+      method: 'GET',
+      url: '/me'
+    }).then(function successCallback(response) {
+      defer.resolve(response);
+    }, function errorCallback(response) {
+      defer.resolve(response);
+    });
+    return defer.promise;
   };
 
   $scope.submitLoginForm = function () {
@@ -45,4 +68,9 @@ zurvives.controller('AuthenticationController', function($scope, $http, toastr){
         $scope.loginForm.loading = false;
       });
   };
+
+
+  $scope.init().then(function(data) {
+    //Stuff we want to do after we Load the current connected user
+  });
 });
