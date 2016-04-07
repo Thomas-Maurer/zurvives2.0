@@ -34,12 +34,32 @@
     <link rel="stylesheet" href="/bower_components/bootstrap-material-design/dist/css/material-fullpalette.css">
     <link rel="stylesheet" href="/bower_components/bootstrap-material-design/dist/css/ripples.css">
     <link rel="stylesheet" href="/bower_components/bootstrap-material-design/dist/css/roboto.css">
+    <link rel="stylesheet" href="/bower_components/angular-toastr/dist/angular-toastr.css">
     <!--STYLES END-->
+
+    <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
+    <script type="text/javascript">
+      window.SAILS_LOCALS = { _csrf: "<%= _csrf %>" };
+    </script>
   </head>
 
   <body>
   <div class="header">
-    <p>TEST Header</p>
+    <form  ng-controller="AuthenticationController" ng-submit="submitLoginForm()" class="navbar-form navbar-right">
+
+      <div class="form-group">
+        <input ng-model="loginForm.email" type="text" placeholder="Email" name="email" class="form-control">
+      </div>
+      <div class="form-group">
+        <input ng-model="loginForm.password" type="password" placeholder="Password" name="password" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-success">
+        <span ng-show="!loginForm.loading">Sign in</span>
+        <span ng-show="loginForm.loading" class="fa fa-spinner"></span>
+        <span ng-show="loginForm.loading">Signing in...</span>
+      </button>
+      <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+    </form>
   </div>
 
   <div class="content">
@@ -107,8 +127,9 @@
     <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="/bower_components/bootstrap-material-design/dist/js/material.js"></script>
     <script src="/bower_components/bootstrap-material-design/dist/js/ripples.js"></script>
+    <script src="/bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
     <script src="/js/app.js"></script>
-    <script src="/js/controllers/Authetication.controller.js"></script>
+    <script src="/js/controllers/Authentication.controller.js"></script>
     <script src="/js/controllers/UserController.js"></script>
     <script src="/js/controllers/homePageController.js"></script>
     <!--SCRIPTS END-->

@@ -10,7 +10,40 @@ module.exports = {
 
   },
   login: function (req, res) {
+// Try to look up user using the provided email address
+    User.findOne({
+      email: req.param('email')
+    }, function foundUser(err, user) {
+      if (err) return res.negotiate(err);
+      if (!user) return res.notFound();
 
+      // Compare password attempt from the form params to the encrypted password
+      // from the database (`user.password`)
+      require('bcrypt').compare(
+        req.param('password'),
+        user.password,
+        function(error, result){
+          console.log(result);
+          if (!result) {
+            return res.negotiate(err);
+          } else {
+            // Store user id in the user session
+            req.session.me = user.id;
+
+            // All done- let the client know that everything worked.
+            return res.ok();
+          }
+        });
+    });
+
+  },
+  find: function(req, res) {
+    User.find().exec(function(err, users){
+      _.each(users, function(user){
+        delete user.password;
+      });
+      return res.json(users);
+    });
   }
 	
 };

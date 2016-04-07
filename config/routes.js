@@ -38,9 +38,10 @@ module.exports.routes = {
   '/topUsers': {
     view: 'topUsers'
   },
-  '/login': {
+  'PUT /login': 'UserController.login',
+  '/suscribe': {
     controller: 'AuthController',
-    action: 'login'
+    action: 'signup'
   },
   '/logout': {
     controller: 'AuthController',
