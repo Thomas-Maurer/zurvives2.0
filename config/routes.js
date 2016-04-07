@@ -37,7 +37,16 @@ module.exports.routes = {
   },
   '/topUsers': {
     view: 'topUsers'
+  },
+  '/login': {
+    controller: 'AuthController',
+    action: 'login'
+  },
+  '/logout': {
+    controller: 'AuthController',
+    action: 'logout'
   }
+
 
   /***************************************************************************
   *                                                                          *
