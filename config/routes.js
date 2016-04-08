@@ -40,6 +40,7 @@ module.exports.routes = {
   },
   'PUT /login': 'UserController.login',
   'GET /me': 'UserController.me',
+  'GET /logout': 'UserController.logout',
   '/suscribe': {
     controller: 'AuthController',
     action: 'signup'

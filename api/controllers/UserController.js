@@ -9,6 +9,26 @@ module.exports = {
   signup: function (req, res) {
 
   },
+  logout: function (req, res) {
+    // Look up the user record from the database which is
+    // referenced by the id in the user session (req.session.me)
+    User.findOne({id: req.session.me}, function foundUser(err, user) {
+      if (err) return res.negotiate(err);
+
+      // If session refers to a user who no longer exists, still allow logout.
+      if (!user) {
+        sails.log.verbose('Session refers to a user who no longer exists.');
+        return res.redirect('/');
+      }
+
+      // Wipe out the session (log out)
+      req.session.me = null;
+
+      // Either send a 200 OK or redirect to the home page
+      return res.redirect('/');
+
+    });
+  },
   login: function (req, res) {
 // Try to look up user using the provided email address
     User.findOne({
@@ -52,12 +72,14 @@ module.exports = {
           return res.negotiate(err);
         }
         if (!me) {
-          return res.notFound('Could not find Finn, sorry.');
+          return res.json(404, null);
         }
         delete me.password;
         sails.log('Found "%s"', me.email);
         return res.json(me);
       });
+    }else {
+      return res.json(null);
     }
 
   }

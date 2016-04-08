@@ -45,7 +45,7 @@
 
   <body>
   <div class="header">
-    <form ng-show="logged" ng-controller="AuthenticationController" ng-submit="submitLoginForm()" class="navbar-form navbar-right">
+    <form ng-show="!logged" ng-controller="AuthenticationController" ng-submit="submitLoginForm()" class="navbar-form navbar-right">
       <div class="form-group">
         <input ng-model="loginForm.email" type="text" placeholder="Email" name="email" class="form-control">
       </div>
@@ -56,6 +56,15 @@
         <span ng-show="!loginForm.loading">Sign in</span>
         <span ng-show="loginForm.loading" class="fa fa-spinner"></span>
         <span ng-show="loginForm.loading">Signing in...</span>
+      </button>
+      <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+    </form>
+
+    <form ng-show="logged" ng-controller="AuthenticationController" ng-submit="submitLogoutForm()" class="navbar-form navbar-right">
+      <button type="submit" class="btn btn-success">
+        <span ng-show="!logoutForm.loading">Logout</span>
+        <span ng-show="logoutForm.loading" class="fa fa-spinner"></span>
+        <span ng-show="logoutForm.loading">Logout...</span>
       </button>
       <input type="hidden" name="_csrf" value="<%= _csrf %>" />
     </form>

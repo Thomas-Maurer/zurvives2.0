@@ -1,17 +1,22 @@
 zurvives.controller('AuthenticationController', function($scope, $http, toastr, $q){
 
   $scope.loginForm = {};
+  $scope.logoutForm = {};
   $scope.loginForm.loading = false;
   $scope.logged = false;
   $scope.connectedUser = {};
+  $scope.logoutForm.loading = false;
 
 //Load All data we need before load other function
   $scope.init = function () {
     var defer = $q.defer();
     $scope.getConnectedUserInfo().then(function (data){
-      $scope.connectedUser = data;
-      $scope.logged = true;
+      if (data.data !== null && data.data !== undefined) {
+        $scope.connectedUser = data;
+        $scope.logged = true;
+      } else {
 
+      }
       defer.resolve(true);
     });
     return defer.promise;
@@ -66,6 +71,41 @@ zurvives.controller('AuthenticationController', function($scope, $http, toastr, 
       })
       .finally(function eitherWay(){
         $scope.loginForm.loading = false;
+      });
+  };
+
+  $scope.submitLogoutForm = function () {
+    // Set the loading state (i.e. show loading spinner)
+    $scope.logoutForm.loading = true;
+
+    // Submit request to Sails.
+    $http.get('/logout')
+      .then(function onSuccess (){
+        // Refresh the page now that we've been logged out.
+        $scope.logged = false;
+        window.location = '/';
+      })
+      .catch(function onError(sailsResponse) {
+
+        // Handle known error type(s).
+        // Invalid username / password combination.
+        if (sailsResponse.status === 400 || 404) {
+          // $scope.loginForm.topLevelErrorMessage = 'Invalid email/password combination.';
+          //
+          toastr.error('Logout failed', 'Error', {
+            closeButton: true
+          });
+          return;
+        }
+
+        toastr.error('An unexpected error occurred, please try again.', 'Error', {
+          closeButton: true
+        });
+        return;
+
+      })
+      .finally(function eitherWay(){
+        $scope.logoutForm.loading = false;
       });
   };
 
