@@ -43,12 +43,13 @@ module.exports = {
         req.param('password'),
         user.password,
         function(error, result){
-          console.log(result);
           if (!result) {
             return res.negotiate(err);
           } else {
             // Store user id in the user session
             req.session.me = user.id;
+
+            sails.sockets.blast('test', {user: user});
 
             // All done- let the client know that everything worked.
             return res.ok();

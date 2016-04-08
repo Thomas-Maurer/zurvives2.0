@@ -48,7 +48,6 @@ zurvives.controller('AuthenticationController', function($scope, $http, toastr, 
       .then(function onSuccess (){
         // Refresh the page now that we've been logged in.
         $scope.logged = true;
-        window.location = '/';
       })
       .catch(function onError(sailsResponse) {
 
@@ -83,7 +82,6 @@ zurvives.controller('AuthenticationController', function($scope, $http, toastr, 
       .then(function onSuccess (){
         // Refresh the page now that we've been logged out.
         $scope.logged = false;
-        window.location = '/';
       })
       .catch(function onError(sailsResponse) {
 
@@ -112,5 +110,9 @@ zurvives.controller('AuthenticationController', function($scope, $http, toastr, 
 
   $scope.init().then(function(data) {
     //Stuff we want to do after we Load the current connected user
+
+    io.socket.on('test', function () {
+      console.log('test');
+    });
   });
 });
