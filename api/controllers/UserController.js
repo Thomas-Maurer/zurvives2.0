@@ -39,7 +39,7 @@ module.exports = {
 
       // Compare password attempt from the form params to the encrypted password
       // from the database (`user.password`)
-      require('bcrypt').compare(
+      require('bcryptjs').compare(
         req.param('password'),
         user.password,
         function(error, result){
