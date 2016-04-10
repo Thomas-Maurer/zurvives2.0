@@ -1,11 +1,14 @@
-zurvives.controller('AuthenticationController', function($scope, $http, toastr, $q){
+zurvives.controller('AuthenticationController', function($window ,$scope, $http, toastr, $q){
 
   $scope.loginForm = {};
   $scope.logoutForm = {};
+  $scope.signupForm = {};
   $scope.loginForm.loading = false;
+  $scope.logoutForm.loading = false;
+  $scope.signupForm.loading = false;
   $scope.logged = false;
   $scope.connectedUser = {};
-  $scope.logoutForm.loading = false;
+
 
 //Load All data we need before load other function
   $scope.init = function () {
@@ -105,6 +108,51 @@ zurvives.controller('AuthenticationController', function($scope, $http, toastr, 
       .finally(function eitherWay(){
         $scope.logoutForm.loading = false;
       });
+  };
+
+  $scope.submitSignUpForm = function () {
+    // Set the loading state (i.e. show loading spinner)
+    $scope.signupForm.loading = true;
+
+    // Submit request to Sails.
+    $http.post('user/create', {
+          email: $scope.signupForm.email,
+          password: $scope.signupForm.password,
+          name: $scope.signupForm.name
+        })
+        .then(function onSuccess (){
+
+          $scope.loginForm.email = $scope.signupForm.email;
+          $scope.loginForm.password = $scope.signupForm.password;
+          // Call submitLogin to log our new user
+          $scope.submitLoginForm();
+          $window.location.href = "/";
+
+        })
+        .catch(function onError(sailsResponse) {
+
+
+          // Handle known error type(s).
+          // Invalid username / password combination.
+          if (sailsResponse.status === 400 || 404) {
+            // $scope.loginForm.topLevelErrorMessage = 'Invalid email/password combination.';
+            //
+            //todo Add others Errors
+            toastr.error(sailsResponse.data.Errors.email[0].message, 'Error', {
+              closeButton: true
+            });
+            return;
+          }
+
+          toastr.error('An unexpected error occurred, please try again.', 'Error', {
+            closeButton: true
+          });
+          return;
+
+        })
+        .finally(function eitherWay(){
+          $scope.signupForm.loading = false;
+        });
   };
 
 

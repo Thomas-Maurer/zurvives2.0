@@ -52,7 +52,7 @@ module.exports = {
             sails.sockets.blast('test', {user: user});
 
             // All done- let the client know that everything worked.
-            return res.ok();
+            return res.redirect('/');
           }
         });
     });

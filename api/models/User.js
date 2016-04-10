@@ -18,7 +18,8 @@ module.exports = {
       required: true
     },
     name: {
-      type: 'string'
+      type: 'string',
+      required: true
     },
     points: {
       type: 'integer'
@@ -28,6 +29,22 @@ module.exports = {
       via: 'user'
     }
   },
+
+  //model validation messages definitions
+  validationMessages: { //hand for i18n & l10n
+    email: {
+      required: 'Email is required',
+      email: 'Provide valid email address',
+      unique: 'Email address is already taken'
+    },
+    name: {
+      required: 'Username is required'
+    },
+    password: {
+      required: 'Password is required'
+    }
+  },
+
   beforeCreate: function(user, cb) {
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(user.password, salt, function (err, hash) {
