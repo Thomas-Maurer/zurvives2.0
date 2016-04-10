@@ -50,7 +50,7 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
     })
       .then(function onSuccess (){
         // Refresh the page now that we've been logged in.
-        $scope.logged = true;
+        $scope.init();
       })
       .catch(function onError(sailsResponse) {
 
@@ -115,17 +115,15 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
     $scope.signupForm.loading = true;
 
     // Submit request to Sails.
-    $http.post('user/create', {
+    $http.post('/signup', {
           email: $scope.signupForm.email,
           password: $scope.signupForm.password,
           name: $scope.signupForm.name
         })
         .then(function onSuccess (){
-
-          $scope.loginForm.email = $scope.signupForm.email;
-          $scope.loginForm.password = $scope.signupForm.password;
-          // Call submitLogin to log our new user
-          $scope.submitLoginForm();
+          toastr.success('Successfully signup', 'Success', {
+            closeButton: true
+          });
           $window.location.href = "/";
 
         })
@@ -158,7 +156,6 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
 
   $scope.init().then(function(data) {
     //Stuff we want to do after we Load the current connected user
-
     io.socket.on('test', function () {
       console.log('test');
     });

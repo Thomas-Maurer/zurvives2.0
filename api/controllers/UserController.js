@@ -7,7 +7,37 @@
 
 module.exports = {
   signup: function (req, res) {
+    // Create a User with the params sent from
+    // the sign-up form --> signup.ejs
+    User.create({
+          name: req.param('name'),
+          email: req.param('email'),
+          password: req.param('password')
+        }, function userCreated(err, newUser) {
+          if (err) {
 
+            console.log("err: ", err);
+            console.log("err.invalidAttributes: ", err.invalidAttributes)
+
+            // If this is a uniqueness error about the email attribute,
+            // send back an easily parseable status code.
+            if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+                && err.invalidAttributes.email[0].rule === 'unique') {
+              return res.negotiate(err);
+            }
+
+            // Otherwise, send back something reasonable as our error response.
+            return res.negotiate(err);
+          }
+
+          // Log user in
+          req.session.me = newUser.id;
+
+          // Send back the id of the new user
+          return res.json({
+            id: newUser.id
+          });
+    });
   },
   logout: function (req, res) {
     // Look up the user record from the database which is
