@@ -9,34 +9,40 @@ module.exports = {
 
   attributes: {
     name: {
-      type: 'string'
+      type: 'string',
+      required: true
     },
     biography: {
       type: 'string'
     },
     life: {
-      type: 'integer'
+      type: 'integer',
+      required: true
     },
     actionLeft: {
-      type: 'integer'
+      type: 'integer',
+      required: true
     },
     user: {
-      model: "user"
-    },
-
-    mainHand: {
-      model: 'weapon'
-    },
-    offHand: {
-      model: 'weapon'
+      model: 'user',
+      required: true
     },
     talents: {
       collection: 'talent',
       via: 'ownersTalent'
     },
     experience: {
-      type: 'integer'
+      type: 'integer',
+      required: true
+    },
+    inventory: {
+      collection: 'item'
+    },
+    equipment: {
+      collection: 'item'
     }
+
+    //todo Add verification for each attribute to avoid errors in DB
 
   }
 };

@@ -1,5 +1,5 @@
 /**
-* Weapon.js
+* Item.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -11,20 +11,11 @@ module.exports = {
     name: {
       type: 'string'
     },
-    description: {
-      type: 'string'
+    quality: {
+      model: 'quality'
     },
-    damage: {
-      type: 'integer'
-    },
-    range: {
-      type: 'integer'
-    },
-    reload: {
-      type: 'boolean'
-    },
-    oneHand: {
-      type: 'boolean'
+    price: {
+      type: 'double'
     }
   }
 };
