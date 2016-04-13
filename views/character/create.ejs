@@ -1,0 +1,21 @@
+<div ng-controller="UserController">
+  <div class="signup">
+      <form ng-submit="createCharacter()">
+
+      <h1>Create new char</h1>
+
+      <fieldset>
+        <legend>Basic info</legend>
+        <label for="name">Name:</label>
+        <input ng-model="characterInfo.name" type="text" id="name" name="char_name">
+
+        <label for="mail">Biography:</label>
+        <input ng-model="characterInfo.biography" type="text" id="mail" name="char_biography">
+
+      </fieldset>
+      <button type="submit">Create</button>
+    </form>
+  </div>
+  <%- partial ('listCharUser.ejs') %>
+</div>
+

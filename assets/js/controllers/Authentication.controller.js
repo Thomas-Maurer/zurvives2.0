@@ -48,8 +48,11 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
       email: $scope.loginForm.email,
       password: $scope.loginForm.password
     })
-      .then(function onSuccess (){
+      .then(function onSuccess (data){
         // Refresh the page now that we've been logged in.
+        io.socket.put('/login', function (resData, jwres){
+          console.log(resData);
+        });
         $scope.init();
       })
       .catch(function onError(sailsResponse) {
@@ -84,6 +87,10 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
       .then(function onSuccess (){
         // Refresh the page now that we've been logged out.
         $scope.logged = false;
+        // Refresh the page now that we've been logged in.
+        io.socket.get('/logout', function (resData, jwres){
+          console.log(resData);
+        });
       })
       .catch(function onError(sailsResponse) {
 

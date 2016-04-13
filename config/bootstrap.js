@@ -17,5 +17,13 @@ module.exports.bootstrap = function(cb) {
   console.log('Seeding database ....');
   User.create({email: 'toto@mail.com', password: '123456', name: 'test', points: 4500}).exec(console.log);
   User.create({email: 'titi@mail.com', password: '123456', name: 'titi', points: 9900}).exec(console.log);
+  Character.create({
+    name:  'CharOfToto',
+    biography:  'CharOfTotoBiography',
+    user:  1,
+    life:  100,
+    actionLeft:  2,
+    experience:  0
+  }).exec(console.log);
   cb();
 };

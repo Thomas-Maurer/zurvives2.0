@@ -11,14 +11,14 @@ module.exports = {
     Character.create({
       name:  req.param('name'),
       biography:  req.param('biography'),
-      user:  req.param('user'),
+      user:  req.session.me,
       life:  100,
       actionLeft:  2,
       experience:  0
     }, function characterCreated(err, newChar) {
       if (err) {
         console.log("err: ", err);
-        console.log("err.invalidAttributes: ", err.invalidAttributes)
+        console.log("err.invalidAttributes: ", err.invalidAttributes);
 
         // If this is a uniqueness error about the email attribute,
         // send back an easily parseable status code.
