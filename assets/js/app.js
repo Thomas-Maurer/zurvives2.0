@@ -1,6 +1,7 @@
 'use strict';
 
-var zurvives = angular.module('Zurvives', ['ngRoute', 'ui.bootstrap', 'toastr']);
+var zurvives = angular.module('Zurvives', ['ngRoute', 'ui.bootstrap', 'toastr'])
+    .constant('_', window._);
 
 zurvives.config(function($routeProvider, $locationProvider) {
         // use the HTML5 History API

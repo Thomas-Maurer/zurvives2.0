@@ -40,6 +40,7 @@ var jsFilesToInject = [
   'bower_components/bootstrap-material-design/dist/js/ripples.js',
   'bower_components/bootstrap/dist/js/boostrap.js',
   'bower_components/angular-toastr/dist/angular-toastr.tpls.js',
+  'bower_components/underscore/underscore.js',
 
   // Dependencies like jQuery, or Angular are brought in here
   'js/dependencies/**/*.js',

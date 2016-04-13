@@ -25,5 +25,38 @@ module.exports.bootstrap = function(cb) {
     actionLeft:  2,
     experience:  0
   }).exec(console.log);
+  Stat.create({
+    name: 'perception', description: 'chaque points augmente la précision du personnage'
+  }).exec(console.log);
+  Stat.create({
+    name: 'vitality', description: 'chaque points augmente la vitalité du personnage'
+  }).exec(console.log);
+  Stat.create({
+    name: 'speed', description: 'chaque points augmente la capacité de déplacement du personnage'
+  }).exec(console.log);
+  Stat.create({
+    name: 'strength', description: 'chaque points augmente la force du personnage'
+  }).exec(console.log);
+  Stat.create({
+    name: 'intel', description: 'chaque points augmente l\'intelligence du personnage'
+  }).exec(console.log);
+  Stat.create({
+    name: 'dexterity', description: 'chaque points augmente la dextérité du personnage'
+  }).exec(console.log);
+  Stat.create({
+    name: 'willpower', description: 'chaque points augmente la volonté du personnage'
+  }).exec(console.log);
+  Stat.create({
+    name: 'luck', description: 'chaque points augmente la chance du personnage'
+  }).exec(console.log);
+  Stat.create({
+    name: 'agility', description: 'chaque points augmente l\'agilité du personnage'
+  }).exec(console.log);
+  Stat.create({
+    name: 'resistance', description: 'chaque points augmente la resistance physique du personnage'
+  }).exec(console.log);
+  Stat.create({
+    name: 'charisma', description: 'chaque points augmente le charisme du personnage'
+  }).exec(console.log);
   cb();
 };

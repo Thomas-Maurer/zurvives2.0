@@ -7,25 +7,9 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
   $scope.logoutForm.loading = false;
   $scope.signupForm.loading = false;
   $scope.logged = false;
-  $scope.connectedUser = {};
 
 
-//Load All data we need before load other function
-  $scope.init = function () {
-    var defer = $q.defer();
-    $scope.getConnectedUserInfo().then(function (data){
-      if (data.data !== null && data.data !== undefined) {
-        $scope.connectedUser = data;
-        $scope.logged = true;
-      } else {
-
-      }
-      defer.resolve(true);
-    });
-    return defer.promise;
-  };
-
-  //Return user information
+  //Return user information to check if he is connected or not
   $scope.getConnectedUserInfo = function () {
     var defer = $q.defer();
     $http({
@@ -39,6 +23,15 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
     return defer.promise;
   };
 
+  $scope.getConnectedUserInfo().then(function (data){
+    if (data.data !== null && data.data !== undefined) {
+      //User Connected
+      $scope.logged = true;
+    } else {
+
+    }
+  });
+
   $scope.submitLoginForm = function () {
     // Set the loading state (i.e. show loading spinner)
     $scope.loginForm.loading = true;
@@ -49,11 +42,11 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
       password: $scope.loginForm.password
     })
       .then(function onSuccess (data){
+        $scope.logged = true;
         // Refresh the page now that we've been logged in.
         io.socket.put('/login', function (resData, jwres){
           console.log(resData);
         });
-        $scope.init();
       })
       .catch(function onError(sailsResponse) {
 
@@ -87,7 +80,7 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
       .then(function onSuccess (){
         // Refresh the page now that we've been logged out.
         $scope.logged = false;
-        // Refresh the page now that we've been logged in.
+        // Refresh the page now that we've been logged out.
         io.socket.get('/logout', function (resData, jwres){
           console.log(resData);
         });
@@ -159,11 +152,4 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
         });
   };
 
-
-  $scope.init().then(function(data) {
-    //Stuff we want to do after we Load the current connected user
-    io.socket.on('test', function () {
-      console.log('test');
-    });
-  });
 });

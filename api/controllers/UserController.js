@@ -56,13 +56,12 @@ module.exports = {
         req.session.me = null;
 
         // Either send a 200 OK or redirect to the home page
-        return res.redirect('/');
+        return res.ok();
 
       });
     }else {
-      //Fire an event to the user to load current user data
-      sails.sockets.broadcast(req.session.socketId, 'userLogout', {user: req.session.socketId});
-      req.session.socketId = null;
+      //Fire an event to the user to logout current user
+      sails.sockets.broadcast(sails.sockets.getId(req), 'userLogout', {user: req.session.socketId});
 
     }
   },
@@ -93,9 +92,8 @@ module.exports = {
           });
       });
     }else {
-      req.session.socketId = sails.sockets.getId(req);
       //Fire an event to the user to load current user data
-      sails.sockets.broadcast(req.session.socketId, 'userLogin', {user: req.session.socketId});
+      sails.sockets.broadcast(sails.sockets.getId(req), 'userLogin', {user: req.session.socketId});
     }
   },
   find: function(req, res) {

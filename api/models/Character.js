@@ -40,7 +40,13 @@ module.exports = {
     },
     equipment: {
       collection: 'item'
+    },
+    charStats: {
+      collection: 'stat',
+      via: 'charOwner',
+      through: 'charstats'
     }
+    
 
     //todo Add verification for each attribute to avoid errors in DB
 
