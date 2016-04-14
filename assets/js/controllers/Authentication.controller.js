@@ -152,4 +152,9 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
         });
   };
 
+  io.socket.on('userUnauthorized', function (data) {
+    $window.location.href = "/";
+    toastr.error(data.message, "Error");
+  });
+
 });

@@ -40,7 +40,9 @@ module.exports.routes = {
   },
   'POST /character': {},
   'GET /character/create':{
-    view: 'character/create'
+    view: 'character/create',
+    controller: "UserController",
+    action: "me"
   },
   'GET /signup': {view: 'signup', locals: {layout: 'signup'}},
   'PUT /login': 'UserController.login',

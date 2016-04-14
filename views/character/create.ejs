@@ -15,7 +15,7 @@
         <label for="mail">Stats: Nb points left -> {{characterInfo.nbPointsStats}}</label>
           <ul ng-repeat="(key, stat) in Stats">
             <li>
-              {{stat.name}} : {{stat.value || 0}}   <span ng-click="increaseStat(stat.id)" class="glyphicon glyphicon-plus" aria-hidden="true"></span> <span ng-click="decreaseStat(stat.id)" class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+              {{stat.name}} : {{stat.value || 0}}   <input type="button" ng-click="increaseStat(stat.id)" class="glyphicon glyphicon-plus tiny" aria-hidden="true" value="+"> <input type="button" ng-click="decreaseStat(stat.id)" class="glyphicon glyphicon-minus tiny" aria-hidden="true" value="-">
             </li>
           </ul>
       </fieldset>

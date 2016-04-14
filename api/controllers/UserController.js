@@ -105,22 +105,27 @@ module.exports = {
     });
   },
   me: function(req, res) {
-    if (req.session.me !== undefined){
-      User.findOne({id: req.session.me})
-        .populate('characters')
-        .exec(function (err, me){
-        if (err) {
-          return res.negotiate(err);
-        }
-        if (!me) {
-          return res.json(404, null);
-        }
-        delete me.password;
-        sails.log('Found "%s"', me.email);
-        return res.json(me);
-      });
+    if (!req.isSocket) {
+      if (req.session.me !== undefined) {
+        User.findOne({id: req.session.me})
+          .populate('characters')
+          .exec(function (err, me) {
+            if (err) {
+              return res.negotiate(err);
+            }
+            if (!me) {
+              return res.json(404, null);
+            }
+            delete me.password;
+            sails.log('Found "%s"', me.email);
+            return res.json(me);
+          });
+      } else {
+        return res.forbidden(null);
+      }
     }else {
-      return res.json(null);
+      //Fire an event to the user to load current user data
+      sails.sockets.broadcast(sails.sockets.getId(req), 'userUnauthorized', {message: "You need to log in to access this area"});
     }
 
   }

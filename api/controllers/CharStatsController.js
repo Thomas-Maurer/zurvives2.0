@@ -6,6 +6,9 @@
  */
 
 module.exports = {
+  getStatsChar: function (req, res) {
+    
+  }
 	
 };
 

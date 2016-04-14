@@ -30,13 +30,12 @@ module.exports = {
         // Otherwise, send back something reasonable as our error response.
         return res.negotiate(err);
       }
+
+      console.log(newChar.id);
       //Get all the stats and give the initial value
-      _.forEach(req.param('stats'), function (value, key, index) {
-        console.log(index);
-        if (key === 'id') {
-          //Assign a value to a stat
-          CharStatsService.setCharStat(newChar.user, value, 1);
-        }
+      _.forEach(req.param('stats'), function (stat) {
+        //Assign a value to a stat
+        CharStatsService.setCharStat(newChar.id, stat.id, stat.value);
       });
 
       // Send back the id of the new char

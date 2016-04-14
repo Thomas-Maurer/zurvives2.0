@@ -42,8 +42,8 @@ module.exports = {
       collection: 'item'
     },
     charStats: {
-      collection: 'stat',
-      via: 'charOwner',
+      collection: 'charstats',
+      via: 'char',
       through: 'charstats'
     }
     

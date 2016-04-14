@@ -8,14 +8,17 @@
 module.exports = {
 
   attributes: {
-    charOwner:{
-      model:'character'
+    char:{
+      model:'character',
+      required: 'true'
     },
-    charStat: {
-      model: 'stat'
+    stat: {
+      model: 'stat',
+      required: 'true'
     },
     value: {
-      type: 'integer'
+      type: 'integer',
+      required: 'true'
     }
   }
 };

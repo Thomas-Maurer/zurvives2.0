@@ -76,7 +76,11 @@ zurvives.controller('UserController', function($scope, $http, toastr, $q, $windo
         });
         $scope.logged = true;
       } else {
-
+        //Redirect the user to the Homepage if he is not logged
+        io.socket.get('/me', function (resData, jwres){
+          console.log(resData);
+        });
+        //$window.location.href = "/";
       }
       defer.resolve(true);
     });
