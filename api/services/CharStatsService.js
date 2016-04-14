@@ -1,7 +1,7 @@
 exports.setCharStat = function (charID, charStat, valueCharStat) {
     CharStats.create({
         char: charID,
-        charStat: charStat,
+        stat: charStat,
         value: valueCharStat
     }, function characterCreated(err, newChar) {
         console.log(err);

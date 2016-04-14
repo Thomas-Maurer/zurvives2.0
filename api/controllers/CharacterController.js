@@ -12,7 +12,7 @@ module.exports = {
       name:  req.param('name'),
       biography:  req.param('biography'),
       user:  req.session.me,
-      life:  100,
+      life:  req.param('life'),
       actionLeft:  2,
       experience:  0
     }, function characterCreated(err, newChar) {
@@ -30,8 +30,6 @@ module.exports = {
         // Otherwise, send back something reasonable as our error response.
         return res.negotiate(err);
       }
-
-      console.log(newChar.id);
       //Get all the stats and give the initial value
       _.forEach(req.param('stats'), function (stat) {
         //Assign a value to a stat
@@ -43,6 +41,10 @@ module.exports = {
         id: newChar.id
       });
     });
+  },
+
+  updateLife: function (req, res) {
+
   }
 
 	

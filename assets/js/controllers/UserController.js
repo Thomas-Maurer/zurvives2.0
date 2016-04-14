@@ -5,42 +5,51 @@ zurvives.controller('UserController', function($scope, $http, toastr, $q, $windo
   $scope.logged = false;
   $scope.Stats = [];
   $scope.characterInfo.stats = [];
+  $scope.characterInfo.life = 100;
   $scope.characterInfo.nbPointsStats = 10;
 
   $scope.createCharacter = function () {
-    $scope.characterInfo.stats = $scope.Stats;
-    $http.post('/character', $scope.characterInfo)
-      .then(function onSuccess (){
-      // tell the user his new char is created
-        toastr.success('Character fully created', 'Success', {
-          closeButton: true
-        });
-    })
-      .catch(function onError(sailsResponse) {
+    if ($scope.characterInfo.nbPointsStats === 0) {
+      $scope.characterInfo.stats = $scope.Stats;
+      $http.post('/character', $scope.characterInfo)
+        .then(function onSuccess (){
+          // tell the user his new char is created
+          toastr.success('Character fully created', 'Success', {
+            closeButton: true
+          });
+        })
+        .catch(function onError(sailsResponse) {
 
-      // Handle known error type(s).
-      // Invalid username / password combination.
-      if (sailsResponse.status === 400 || 404) {
-        // $scope.loginForm.topLevelErrorMessage = 'Invalid email/password combination.';
-        //
-        toastr.error('Invalid parameters combination.', 'Error', {
-          closeButton: true
-        });
-        return;
-      }
+          // Handle known error type(s).
+          // Invalid username / password combination.
+          if (sailsResponse.status === 400 || 404) {
+            // $scope.loginForm.topLevelErrorMessage = 'Invalid email/password combination.';
+            //
+            toastr.error('Invalid parameters combination.', 'Error', {
+              closeButton: true
+            });
+            return;
+          }
 
-      toastr.error('An unexpected error occurred, please try again.', 'Error', {
-        closeButton: true
-      });
-      return;
+          toastr.error('An unexpected error occurred, please try again.', 'Error', {
+            closeButton: true
+          });
+          return;
 
-    })
+        })
+    }else {
+      toastr.error('You need to spend all the points before you can create your character', 'Error');
+    }
   };
 
   $scope.increaseStat = function (statId) {
     if ($scope.characterInfo.nbPointsStats - 1 >= 0){
       var index = _.findIndex($scope.Stats, function(o) { return o.id == statId; });
       $scope.Stats[index].value = $scope.Stats[index].value + 1;
+      //if we increase vitality, increase the total life of our character
+      if ($scope.Stats[index].name === 'vitality') {
+        $scope.characterInfo.life = $scope.characterInfo.life + $scope.Stats[index].value * 10;
+      }
       if ($scope.Stats[index].value < 0 ) {
         $scope.Stats[index].value = 0
       } else {
@@ -54,6 +63,11 @@ zurvives.controller('UserController', function($scope, $http, toastr, $q, $windo
   $scope.decreaseStat = function (statId) {
     if ($scope.characterInfo.nbPointsStats +1 <= 10){
       var index = _.findIndex($scope.Stats, function(o) { return o.id == statId; });
+      //if we increase vitality, increase the total life of our character
+      if ($scope.Stats[index].name === 'vitality') {
+        $scope.characterInfo.life = $scope.characterInfo.life - $scope.Stats[index].value * 10;
+      }
+
       $scope.Stats[index].value = $scope.Stats[index].value - 1;
       if ($scope.Stats[index].value < 0 ) {
         $scope.Stats[index].value = 0
@@ -80,7 +94,6 @@ zurvives.controller('UserController', function($scope, $http, toastr, $q, $windo
         io.socket.get('/me', function (resData, jwres){
           console.log(resData);
         });
-        //$window.location.href = "/";
       }
       defer.resolve(true);
     });
