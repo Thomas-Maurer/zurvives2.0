@@ -44,6 +44,7 @@ module.exports.routes = {
     controller: "UserController",
     action: "me"
   },
+  'GET /user/dashboard': {view: 'user/dashboard', controller: 'UserController', action: "dashboard"},
   'GET /signup': {view: 'signup', locals: {layout: 'signup'}},
   'PUT /login': 'UserController.login',
   'POST /signup': 'UserController.signup',

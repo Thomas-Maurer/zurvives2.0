@@ -128,6 +128,9 @@ module.exports = {
       sails.sockets.broadcast(sails.sockets.getId(req), 'userUnauthorized', {message: "You need to log in to access this area"});
     }
 
+  },
+  dashboard: function (req, res) {
+    
   }
 	
 };
