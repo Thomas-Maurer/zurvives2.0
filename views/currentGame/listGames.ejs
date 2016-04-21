@@ -1,0 +1,9 @@
+<div ng-controller="GameController">
+  <button ng-click="openModalChooseChar()">Create Game</button>
+  <ul>
+    <li ng-repeat="game in listCurrentGames">
+      <p>{{game.name}}</p>
+      <p></p>
+    </li>
+  </ul>
+</div>

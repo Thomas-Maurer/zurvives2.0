@@ -35,13 +35,14 @@ var jsFilesToInject = [
   'bower_components/jquery/dist/jquery.js',
   'bower_components/angular/angular.js',
   'bower_components/angular-route/angular-route.js',
-  'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+  'bower_components/angular-animate/angular-animate.js',
   'bower_components/bootstrap-material-design/dist/js/material.js',
   'bower_components/bootstrap-material-design/dist/js/ripples.js',
   'bower_components/bootstrap/dist/js/boostrap.js',
   'bower_components/angular-toastr/dist/angular-toastr.tpls.js',
   'bower_components/underscore/underscore.js',
   'bower_components/EaselJS/lib/easeljs-0.8.2.min.js',
+  'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
 
   // Dependencies like jQuery, or Angular are brought in here
   'js/dependencies/**/*.js',

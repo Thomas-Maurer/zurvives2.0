@@ -38,6 +38,9 @@ module.exports.routes = {
   '/topUsers': {
     view: 'topUsers'
   },
+  '/games/lobby': {
+    view: 'currentGame/listGames'
+  },
   'POST /character': {},
   'GET /character/create':{
     view: 'character/create',
@@ -49,7 +52,9 @@ module.exports.routes = {
   'PUT /login': 'UserController.login',
   'POST /signup': 'UserController.signup',
   'GET /me': 'UserController.me',
-  'GET /logout': 'UserController.logout'
+  'GET /logout': 'UserController.logout',
+  'GET /games/getGamesRunning': 'GameController.getGamesRunning',
+  'POST /games/create': 'GameController.create'
 
 
   /***************************************************************************

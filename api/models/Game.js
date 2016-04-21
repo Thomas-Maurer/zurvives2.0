@@ -13,14 +13,16 @@ module.exports = {
       required: true
     },
     listPlayers: {
-      collection: 'user'
+      collection: 'user',
+      required: true
     },
     listChar: {
-      collection: 'character'
+      collection: 'character',
+      required: true
     },
     scenario: {
       model: 'scenario',
-      required: true
+      required: false
     }
 
   }
