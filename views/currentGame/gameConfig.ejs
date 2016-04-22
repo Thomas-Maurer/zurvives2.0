@@ -1,0 +1,9 @@
+<div>
+  <label for="listChars"> Single select: </label><br>
+  <select name="listChars" ng-model="selectedChar">
+    <option ng-repeat="option in listChars track by $index" value="{{$index}}">{{option.name}}</option>
+
+  </select>
+
+  <button ng-click="ok()">Create</button>
+</div>

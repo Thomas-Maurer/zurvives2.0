@@ -8,28 +8,11 @@
 module.exports = {
 
   create: function (req, res) {
-    if (!req.isSocket) {
-      var players = [];
-      var listChars = [];
-      var creator = User.findOne({id: req.session.me})
-        .populate('characters')
-        .exec(function (err, me) {
-          if (err) {
-            return res.negotiate(err);
-          }
-          if (!me) {
-            return res.json(404, null);
-          }
-          delete me.password;
-          sails.log('Found "%s"', me.email);
-          return res.json(me);
-        });
-
-      players.push(creator);
+    if (req.isSocket) {
       Game.create({
-        name: 'test',
-        listPlayers: players,
-        listChar: listChars
+        name: req.param('name'),
+        listPlayers: req.param('listPlayers'),
+        listChar: req.param('listChar')
       }).exec(function (err, game) {
         if (err) {
           return res.negotiate(err);
@@ -37,20 +20,29 @@ module.exports = {
         if (!game) {
           return res.json(404, null);
         }
-
-        return res.ok();
+        //suscribe the creator of the Game to the room
+        sails.sockets.join(req, req.param('name'));
+        //send to all clients that a game has been created
+        sails.sockets.blast('newGameCreated');
+        //return the game object
+        return res.json(game);
       })
 
     } else {
       
     }
   },
+  joinGame: function (req,res) {
+
+  },
   getGamesRunning: function (req,res) {
     if (!req.isSocket) {
       Game.find()
         .populate('listPlayers')
+        .populate('listChar')
         .exec(function(err, games){
           _.each(games, function(game){
+
           });
           return res.json(games);
       });

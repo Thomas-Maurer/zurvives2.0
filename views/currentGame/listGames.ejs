@@ -1,8 +1,8 @@
-<div ng-controller="GameController">
+<div ng-controller="LobbyController">
   <button ng-click="openModalChooseChar()">Create Game</button>
   <ul>
     <li ng-repeat="game in listCurrentGames">
-      <p>{{game.name}}</p>
+      <p>{{game.name}} {{game.listPlayers.length}} / 5 </p>
       <p></p>
     </li>
   </ul>

@@ -47,6 +47,7 @@ module.exports.routes = {
     controller: "UserController",
     action: "me"
   },
+  'GET /currentGame/gameConfig': {view: 'currentGame/gameConfig', locals: {layout: 'currentGame/gameConfig'}},
   'GET /user/dashboard': {view: 'user/dashboard', controller: 'UserController', action: "dashboard"},
   'GET /signup': {view: 'signup', locals: {layout: 'signup'}},
   'PUT /login': 'UserController.login',
