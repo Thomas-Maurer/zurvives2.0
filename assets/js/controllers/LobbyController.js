@@ -80,7 +80,14 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
 
     });
   };
-  
+
+  //Need to rework !
+  $scope.joinGame = function (gameName) {
+    io.socket.get('/games/play/' + gameName ,function (resData, jwres){
+      $window.location.href = "/games/play/" + gameName;
+    });
+  };
+
   $scope.connectToRoom = function (name) {
     
   };
@@ -113,7 +120,6 @@ zurvives.controller('ModalSelectChar', ['$scope', '$uibModalInstance', function 
   $scope.selectedChar = null;
 
   $scope.ok = function () {
-    debugger;
     $uibModalInstance.close($scope.listChars[$scope.selectedChar]);
   };
 

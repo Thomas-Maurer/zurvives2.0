@@ -3,7 +3,7 @@ zurvives.directive('board', function($http, boardData) {
     link: link,
     scope: true,
     restrict: 'AEC',
-    controller: 'singleGameController'
+    controller: 'gameController'
   };
   return directive;
 
@@ -129,8 +129,8 @@ zurvives.directive('board', function($http, boardData) {
             });
             container.addChild(cellBitmap);
 
-          };
-        };
+          }
+        }
 
         stage.addChild(container);
         stage.addChild(zombiesContainer);
@@ -161,10 +161,16 @@ zurvives.directive('board', function($http, boardData) {
           drawnZone.height = maxY-minY;
           zonesContainer.addChild(drawnZone);
           stage.update();
-        };
+        }
 
         //Emit event when map fully loaded
-        io.socket.emit('map:loaded');
+        debugger;
+        io.socket.get('/games/getCurrentGame', function (data) {
+          io.socket.post('/games/play/mapLoaded', {data: data}, function (data) {
+            console.log(data);
+          });
+        });
+
       }
 
       var player;
@@ -203,8 +209,13 @@ zurvives.directive('board', function($http, boardData) {
         $scope.listZombies.push(zombie);
         zombiesContainer.addChild(zombie);
         if (!broadcast){
-          io.socket.emit('game:add:zombie', {zone: {Zone: zombie.Zone, x: zone.x, y: zone.y}, zombie: {x: zombie.x, y: zombie.y, zone: zombie.Zone, id: zombie.id}, slug: $scope.$parent.slug});
-
+          io.socket.post('/games/' + gameName + '/addZombie' , {zone:
+          {Zone: zombie.Zone, x: zone.x, y: zone.y},
+            zombie:
+            {x: zombie.x, y: zombie.y, zone: zombie.Zone, id: zombie.id},
+            slug: $scope.$parent.slug
+          },function (resData, jwres){
+          });
         }
         stage.update();
       };
@@ -255,7 +266,10 @@ zurvives.directive('board', function($http, boardData) {
 
               var data = {player: {name: player.name, x: player.x, y: player.y, zone: player.Zone}, slug: $scope.$parent.slug};
 
-              io.socket.emit('game:stage:player:move', data);
+              io.socket.post('/game/player/move', data, function (res) {
+                
+              });
+
             } else {
               $scope.flashService.emit('You shall not pass');
 

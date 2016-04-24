@@ -32,8 +32,31 @@ module.exports = {
       
     }
   },
+  mapLoaded: function (req, res) {
+    //console.log(req);
+  },
   joinGame: function (req,res) {
+    console.log(req.param('gameName'));
+    if (req.isSocket) {
 
+      Game.find({name: req.param('gameName')}).exec(function (err, game) {
+        User.update({id: req.session.me}, {currentGame: game.id}).exec(function (err, data) {
+          sails.sockets.join(req, req.param('gameName'));
+        });
+      });
+    }else {
+    }
+  },
+  getGamebyName: function (req,res) {
+
+  },
+  getCurrentGame: function (req,res) {
+    User.findOne({id: req.session.me})
+        .populate('currentGame')
+        .exec(function (err, user) {
+          //console.log(user);
+          return res.json(user);
+        })
   },
   getGamesRunning: function (req,res) {
     if (!req.isSocket) {

@@ -27,6 +27,9 @@ module.exports = {
     characters: {
       collection: 'character',
       via: 'user'
+    },
+    currentGame: {
+      model: 'game'
     }
   },
 
