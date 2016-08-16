@@ -1,7 +1,7 @@
-zurvives.controller('HomePageController', function($scope, $location){
+zurvives.controller('HomePageController', function($scope, $window){
 
     $scope.play = function () {
-        $location.path('/play')
+        $window.location.href = '/games/lobby'
     }
 
 });

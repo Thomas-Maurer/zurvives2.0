@@ -73,7 +73,10 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
       if (selectedChar !== null) {
         //get the char the user choose
         $scope.selectedChar = selectedChar;
-        io.socket.post('/games/create',{name: 'TestGame', listChar: [$scope.selectedChar], listPlayers: [$scope.connectedUser]} ,function (resData, jwres){
+        var gameGuid = guid();
+        io.socket.post('/games/create',{guid: gameGuid, name: 'gameName', listChar: [$scope.selectedChar], listPlayers: [$scope.connectedUser]} ,function (resData, jwres){
+          //Connect the user to the game he creates
+          $scope.joinGame(gameGuid);
           console.log(resData);
         });
       }
@@ -81,15 +84,26 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
     });
   };
 
+  //Generate Unique Guid
+  function guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
   //Need to rework !
-  $scope.joinGame = function (gameName) {
-    io.socket.get('/games/play/' + gameName ,function (resData, jwres){
-      $window.location.href = "/games/play/" + gameName;
+  $scope.joinGame = function (gameGuid) {
+    io.socket.get('/games/play/' + gameGuid ,function (resData, jwres){
+      $window.location.href = "/games/play/" + gameGuid;
     });
   };
 
   $scope.connectToRoom = function (name) {
-    
+
   };
 
   $scope.init().then(function(data) {

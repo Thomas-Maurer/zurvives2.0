@@ -10,6 +10,7 @@ module.exports = {
   create: function (req, res) {
     if (req.isSocket) {
       Game.create({
+        guid: req.param('guid'),
         name: req.param('name'),
         listPlayers: req.param('listPlayers'),
         listChar: req.param('listChar')
@@ -21,7 +22,7 @@ module.exports = {
           return res.json(404, null);
         }
         //suscribe the creator of the Game to the room
-        sails.sockets.join(req, req.param('name'));
+        sails.sockets.join(req, req.param('guid'));
         //send to all clients that a game has been created
         sails.sockets.blast('newGameCreated');
         //return the game object
@@ -29,19 +30,20 @@ module.exports = {
       })
 
     } else {
-      
+
     }
   },
   mapLoaded: function (req, res) {
-    //console.log(req);
+    console.log(req.param('game'));
   },
   joinGame: function (req,res) {
-    console.log(req.param('gameName'));
+    console.log(req.param('gameGuid'));
     if (req.isSocket) {
 
-      Game.find({name: req.param('gameName')}).exec(function (err, game) {
+      Game.find({name: req.param('gameGuid')}).exec(function (err, game) {
         User.update({id: req.session.me}, {currentGame: game.id}).exec(function (err, data) {
-          sails.sockets.join(req, req.param('gameName'));
+          sails.sockets.join(req, req.param('gameGuid'));
+            sails.sockets.broadcast(req.param('gameGuid'), 'newPlayerJoin', {user: 'test'})
         });
       });
     }else {
@@ -55,7 +57,16 @@ module.exports = {
         .populate('currentGame')
         .exec(function (err, user) {
           //console.log(user);
-          return res.json(user);
+          Game.find(user.currentGame.id)
+              .populate('listPlayers')
+              .populate('listChar')
+              .exec(function (err, game) {
+                //remove password from json
+                _.each(game[0].listPlayers, function(player){
+                  delete player.password;
+                });
+                return res.json(game[0]);
+              })
         })
   },
   getGamesRunning: function (req,res) {
@@ -65,7 +76,9 @@ module.exports = {
         .populate('listChar')
         .exec(function(err, games){
           _.each(games, function(game){
-
+            _.each(game.listPlayers, function(player){
+              delete player.password;
+            });
           });
           return res.json(games);
       });
@@ -73,6 +86,5 @@ module.exports = {
 
     }
   }
-	
-};
 
+};

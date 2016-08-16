@@ -142,6 +142,12 @@ zurvives.controller('UserController', function($scope, $http, toastr, $q, $windo
     //Stuff we want to do after we Load the current connected user
   });
 
+//dashboard Feature
+$scope.goToGameLobby = function (){
+  $window.location.href = "/games/lobby";
+};
+
+
   io.socket.on('userLogin', function () {
     console.log("User login");
     $scope.init();

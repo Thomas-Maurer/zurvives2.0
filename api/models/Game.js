@@ -8,13 +8,18 @@
 module.exports = {
 
   attributes: {
-    name: {
+    guid: {
       type: 'string',
       required: true,
       unique: true
     },
+    name: {
+      type: 'string',
+      required: true
+    },
     listPlayers: {
       collection: 'user',
+      via: 'currentGame',
       required: true
     },
     listChar: {
@@ -28,4 +33,3 @@ module.exports = {
 
   }
 };
-

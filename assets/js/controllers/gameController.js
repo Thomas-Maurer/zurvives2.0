@@ -1,5 +1,5 @@
 
-zurvives.controller('gameController', function ($scope, $location, $http) {
+zurvives.controller('gameController', function ($scope, $location, $http, $q, userServices) {
     $scope.players = [];
     $scope.listplayer = [];
     $scope.listZombies = [];
@@ -7,12 +7,36 @@ zurvives.controller('gameController', function ($scope, $location, $http) {
     $scope.alreadyMove = false;
     $scope.alreadyLoot = false;
 
+    //Return Game informations
+    $scope.getCurrentGameInfo = function () {
+      var defer = $q.defer();
+      $http({
+        method: 'GET',
+        url: '/games/getCurrentGame'
+      }).then(function successCallback(response) {
+        defer.resolve(response);
+      }, function errorCallback(response) {
+        defer.resolve(response);
+      });
+      return defer.promise;
+    };
+
+    //Send informations from the current game to the client
+    $scope.getCurrentGameInfo().then(function (data){
+      userServices.then(function (data){
+        $scope.user = data.data;
+        console.log($scope.currentPlayer);
+      });
+      $scope.players = data.data.listPlayers;
+    })
+
 
     $scope.$on('$destroy', function (event) {
         socket.removeAllListeners();
     });
 
     $scope.checkIfPlayerTurn = function () {
+        debugger;
         return $scope.currentGame.turnof === $scope.user.email;
     };
 

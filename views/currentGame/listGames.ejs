@@ -3,7 +3,7 @@
   <ul>
     <li ng-repeat="game in listCurrentGames">
       <p>{{game.name}} {{game.listPlayers.length}} / 5 </p>
-      <button ng-click='joinGame(game.name)'>Join Game</button>
+      <button ng-click='joinGame(game.guid)'>Join Game</button>
     </li>
   </ul>
 </div>

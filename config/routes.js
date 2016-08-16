@@ -42,7 +42,7 @@ module.exports.routes = {
     view: 'currentGame/listGames'
   },
   'POST /character': {},
-  'GET /character/create':{
+  'GET /user/character/create':{
     view: 'character/create',
     controller: "UserController",
     action: "me"
@@ -55,8 +55,10 @@ module.exports.routes = {
   'GET /me': 'UserController.me',
   'GET /logout': 'UserController.logout',
   'GET /games/getGamesRunning': 'GameController.getGamesRunning',
-  'GET /games/play/:gameName': {view: 'currentGame/currentGame', controller:
-      'GameController', action: 'joinGame'},
+  'GET /games/play/:gameName': {
+    view: 'currentGame/currentGame',
+    controller: 'GameController',
+    action: 'joinGame'},
   'POST /games/create': 'GameController.create',
   'POST /games/play/mapLoaded': 'GameController.mapLoaded',
   'GET /games/getCurrentGame': 'GameController.getCurrentGame'

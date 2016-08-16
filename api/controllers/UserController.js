@@ -15,9 +15,7 @@ module.exports = {
           password: req.param('password')
         }, function userCreated(err, newUser) {
           if (err) {
-
-            console.log("err: ", err);
-            console.log("err.invalidAttributes: ", err.invalidAttributes)
+              sails.log.verbose('Error: ' + err);
 
             // If this is a uniqueness error about the email attribute,
             // send back an easily parseable status code.
@@ -106,9 +104,11 @@ module.exports = {
   },
   me: function(req, res) {
     if (!req.isSocket) {
+      sails.log(req.session.me);
       if (req.session.me !== undefined) {
         User.findOne({id: req.session.me})
           .populate('characters')
+          .populate('currentGame')
           .exec(function (err, me) {
             if (err) {
               return res.negotiate(err);
@@ -121,7 +121,7 @@ module.exports = {
             return res.json(me);
           });
       } else {
-        return res.forbidden(null);
+        return res.ok(null);
       }
     }else {
       //Fire an event to the user to load current user data
@@ -130,8 +130,7 @@ module.exports = {
 
   },
   dashboard: function (req, res) {
-    
-  }
-	
-};
 
+  }
+
+};

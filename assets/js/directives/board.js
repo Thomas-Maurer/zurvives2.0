@@ -166,8 +166,9 @@ zurvives.directive('board', function($http, boardData) {
         //Emit event when map fully loaded
         debugger;
         io.socket.get('/games/getCurrentGame', function (data) {
-          io.socket.post('/games/play/mapLoaded', {data: data}, function (data) {
+          io.socket.post('/games/play/mapLoaded', {game: data}, function (data) {
             console.log(data);
+            debugger;
           });
         });
 

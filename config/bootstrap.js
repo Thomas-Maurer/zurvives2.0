@@ -16,11 +16,18 @@ module.exports.bootstrap = function(cb) {
 
   console.log('Seeding database ....');
   User.create({email: 'toto@mail.com', password: '123456', name: 'test', points: 4500}).exec(console.log);
-  User.create({email: 'titi@mail.com', password: '123456', name: 'titi', points: 9900}).exec(console.log);
   Character.create({
-    name:  'CharOfToto',
-    biography:  'CharOfTotoBiography',
+    name:  'Char1',
+    biography:  'Char1Biography',
     user:  1,
+    life:  100,
+    actionLeft:  2,
+    experience:  0
+  }).exec(console.log);
+  Character.create({
+    name:  'Char2',
+    biography:  'Char2Biography',
+    user:  2,
     life:  100,
     actionLeft:  2,
     experience:  0
@@ -58,5 +65,6 @@ module.exports.bootstrap = function(cb) {
   Stat.create({
     name: 'charisma', description: 'chaque points augmente le charisme du personnage'
   }).exec(console.log);
+  User.create({email: 'titi@mail.com', password: '123456', name: 'titi', points: 9900}).exec(console.log);
   cb();
 };

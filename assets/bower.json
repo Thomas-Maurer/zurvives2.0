@@ -30,6 +30,6 @@
     "EaselJS": "~0.8.2"
   },
   "resolutions": {
-    "angular": "1.5.5"
+    "angular": "1.5.8"
   }
 }
