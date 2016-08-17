@@ -55,7 +55,8 @@ module.exports.routes = {
   'GET /me': 'UserController.me',
   'GET /logout': 'UserController.logout',
   'GET /games/getGamesRunning': 'GameController.getGamesRunning',
-  'GET /games/play/:gameName': {
+  'GET /games/checkPlayerTurn': 'GameController.checkPlayerTurn',
+  'GET /games/play/:gameGuid': {
     view: 'currentGame/currentGame',
     controller: 'GameController',
     action: 'joinGame'},

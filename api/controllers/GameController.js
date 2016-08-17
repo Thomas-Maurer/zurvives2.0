@@ -13,7 +13,8 @@ module.exports = {
         guid: req.param('guid'),
         name: req.param('name'),
         listPlayers: req.param('listPlayers'),
-        listChar: req.param('listChar')
+        listChar: req.param('listChar'),
+        turnof: req.param('listPlayers')[0].email
       }).exec(function (err, game) {
         if (err) {
           return res.negotiate(err);
@@ -37,10 +38,8 @@ module.exports = {
     console.log(req.param('game'));
   },
   joinGame: function (req,res) {
-    console.log(req.param('gameGuid'));
     if (req.isSocket) {
-
-      Game.find({name: req.param('gameGuid')}).exec(function (err, game) {
+      Game.find({guid: req.param('gameGuid')}).exec(function (err, game) {
         User.update({id: req.session.me}, {currentGame: game.id}).exec(function (err, data) {
           sails.sockets.join(req, req.param('gameGuid'));
             sails.sockets.broadcast(req.param('gameGuid'), 'newPlayerJoin', {user: 'test'})
@@ -56,7 +55,6 @@ module.exports = {
     User.findOne({id: req.session.me})
         .populate('currentGame')
         .exec(function (err, user) {
-          //console.log(user);
           Game.find(user.currentGame.id)
               .populate('listPlayers')
               .populate('listChar')
@@ -85,6 +83,18 @@ module.exports = {
     } else {
 
     }
+  },
+  checkPlayerTurn: function (req, res) {
+    if (req.isSocket) {
+      var playerTurnEmail,
+      currentPlayer;
+      currentGameService.getCurrentGame(req.session.me, function callback(user) {
+        currentPlayer = user.email;
+      });
+      currentGameService.getCurrentGame(req.session.me, function callback(game) {
+        playerTurnEmail = game.turnof;
+      })
+      return res.json({'playerTurn': currentPlayer === playerTurnEmail})
+    }
   }
-
 };

@@ -29,6 +29,10 @@ module.exports = {
     scenario: {
       model: 'scenario',
       required: false
+    },
+    turnof: {
+      type: 'string',
+      required: true
     }
 
   }

@@ -35,9 +35,11 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
         socket.removeAllListeners();
     });
 
+//Return true if its the player turn
     $scope.checkIfPlayerTurn = function () {
-        debugger;
-        return $scope.currentGame.turnof === $scope.user.email;
+        io.socket.get('/games/checkPlayerTurn', function (currentPlayerTurn, jwres){
+          return currentPlayerTurn;
+        });
     };
 
     $scope.canPerformAction = function () {
