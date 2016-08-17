@@ -1,12 +1,30 @@
 
-zurvives.controller('gameController', function ($scope, $location, $http, $q, userServices) {
+zurvives.controller('gameController', function ($scope, $location, $http, $q, userServices, toastr) {
     $scope.players = [];
     $scope.listplayer = [];
     $scope.listZombies = [];
+    $scope.yourTurn = false;
     $scope.actions = 3;
     $scope.alreadyMove = false;
     $scope.alreadyLoot = false;
 
+    toastr.options = {
+      "closeButton": false,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": true,
+      "positionClass": "toast-top-center",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
     //Return Game informations
     $scope.getCurrentGameInfo = function () {
       var defer = $q.defer();
@@ -22,39 +40,45 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     };
 
     //Send informations from the current game to the client
-    $scope.getCurrentGameInfo().then(function (data){
-      userServices.then(function (data){
-        $scope.user = data.data;
-        console.log($scope.currentPlayer);
+    $scope.getCurrentGameInfo().then(function (currentGame){
+      userServices.then(function (currentUser){
+        $scope.user = currentUser.data;
       });
-      $scope.players = data.data.listPlayers;
+      $scope.players = currentGame.data.listPlayers;
+      $scope.currentGame = currentGame.data;
     })
 
 
     $scope.$on('$destroy', function (event) {
         socket.removeAllListeners();
     });
-
 //Return true if its the player turn
     $scope.checkIfPlayerTurn = function () {
+      var defer = $q.defer();
         io.socket.get('/games/checkPlayerTurn', function (currentPlayerTurn, jwres){
-          return currentPlayerTurn;
+          defer.resolve(currentPlayerTurn.playerTurn);
         });
+        return defer.promise;
     };
 
     $scope.canPerformAction = function () {
         return $scope.actions > 0;
     };
-
+//End the currentPlayer Turn
     $scope.endTurn = function () {
-        if ($scope.currentGame.turnof === $scope.user.email) {
+      $scope.checkIfPlayerTurn().then(function (currentPlayerTurn) {
+        if (currentPlayerTurn) {
             $scope.actions = 0;
             var indexOfCurrentPlayer =_.findIndex($scope.players, _.findWhere($scope.players, {email: $scope.user.email}));
-            var data = {currentplayer: indexOfCurrentPlayer, slug: $scope.slug, actionsLeft: $scope.actions};
-            socket.emit('game:player:endturn', data);
+            var data = {currentplayer: indexOfCurrentPlayer, guid: $scope.currentGame.guid, actionsLeft: $scope.actions};
+            //socket.emit('game:player:endturn', data);
+            console.log(indexOfCurrentPlayer);
+            toastr["info"]("Turn ended");
         } else {
-            flashService.emit("You can't end your turn when it's not your turn GENIUS");
+            toastr["warning"]("You can't end your turn when it's not your turn GENIUS");
+            //flashService.emit("You can't end your turn when it's not your turn GENIUS");
         }
+      });
     };
 
 

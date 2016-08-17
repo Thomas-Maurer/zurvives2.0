@@ -76,8 +76,7 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
         var gameGuid = guid();
         io.socket.post('/games/create',{guid: gameGuid, name: 'gameName', listChar: [$scope.selectedChar], listPlayers: [$scope.connectedUser]} ,function (resData, jwres){
           //Connect the user to the game he creates
-          $scope.joinGame(gameGuid);
-          console.log(resData);
+          $window.location.href = "/games/play/" + gameGuid;
         });
       }
 
@@ -97,8 +96,23 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
 
   //Need to rework !
   $scope.joinGame = function (gameGuid) {
-    io.socket.get('/games/play/' + gameGuid ,function (resData, jwres){
-      $window.location.href = "/games/play/" + gameGuid;
+    var modalInstance = $uibModal.open({
+      animation: true,
+      templateUrl: '/currentGame/gameConfig',
+      controller: 'ModalSelectChar',
+      size: 'lg',
+      scope: $scope
+    });
+    modalInstance.result.then(function (selectedChar) {
+      //Do stuff after we close the modal
+      if (selectedChar !== null) {
+        //get the char the user choose
+        $scope.selectedChar = selectedChar;
+        io.socket.post('/games/update/', {gameGuid: gameGuid, charSelected: $scope.selectedChar, newPlayer: $scope.connectedUser},function (resData, jwres){
+          $window.location.href = "/games/play/" + gameGuid;
+        });
+      }
+
     });
   };
 

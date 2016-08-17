@@ -34,12 +34,32 @@ module.exports = {
 
     }
   },
+  update: function (req, res) {
+      if (req.isSocket) {
+          Game.find({guid: req.param('gameGuid')})
+          .populate('listPlayers')
+          .populate('listChar')
+          .exec(function (err, game) {
+            game = game[0];
+            console.log('charSelected ' + req.param('charSelected'));
+            console.log('newPlayer ' + req.param('newPlayer'));
+            game.listPlayers.push(req.param('newPlayer'));
+            game.listChar.push(req.param('charSelected'));
+            game.save(
+              function(err){
+                console.log('Fail to update' + err);
+              }
+            );
+          });
+      }
+  },
   mapLoaded: function (req, res) {
     console.log(req.param('game'));
   },
   joinGame: function (req,res) {
     if (req.isSocket) {
       Game.find({guid: req.param('gameGuid')}).exec(function (err, game) {
+        console.log(game);
         User.update({id: req.session.me}, {currentGame: game.id}).exec(function (err, data) {
           sails.sockets.join(req, req.param('gameGuid'));
             sails.sockets.broadcast(req.param('gameGuid'), 'newPlayerJoin', {user: 'test'})

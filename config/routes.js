@@ -56,6 +56,7 @@ module.exports.routes = {
   'GET /logout': 'UserController.logout',
   'GET /games/getGamesRunning': 'GameController.getGamesRunning',
   'GET /games/checkPlayerTurn': 'GameController.checkPlayerTurn',
+  'POST /games/update': 'GameController.update',
   'GET /games/play/:gameGuid': {
     view: 'currentGame/currentGame',
     controller: 'GameController',
