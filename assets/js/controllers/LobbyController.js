@@ -74,6 +74,7 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
         //get the char the user choose
         $scope.selectedChar = selectedChar;
         var gameGuid = guid();
+        console.log($scope.connectedUser);
         io.socket.post('/games/create',{guid: gameGuid, name: 'gameName', listChar: [$scope.selectedChar], listPlayers: [$scope.connectedUser]} ,function (resData, jwres){
           //Connect the user to the game he creates
           $window.location.href = "/games/play/" + gameGuid;

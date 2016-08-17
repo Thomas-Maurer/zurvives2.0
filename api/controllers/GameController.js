@@ -22,6 +22,7 @@ module.exports = {
         if (!game) {
           return res.json(404, null);
         }
+
         //suscribe the creator of the Game to the room
         sails.sockets.join(req, req.param('guid'));
         //send to all clients that a game has been created
@@ -41,15 +42,23 @@ module.exports = {
           .populate('listChar')
           .exec(function (err, game) {
             game = game[0];
-            console.log('charSelected ' + req.param('charSelected'));
-            console.log('newPlayer ' + req.param('newPlayer'));
-            game.listPlayers.push(req.param('newPlayer'));
-            game.listChar.push(req.param('charSelected'));
-            game.save(
-              function(err){
-                console.log('Fail to update' + err);
+            delete req.param('newPlayer').characters;
+            //add new player and char to the gameInfo
+            game.listPlayers.add(req.param('newPlayer'));
+            game.listChar.add(req.param('charSelected'));
+
+            game.save({ populate: false },function afterUpdate(err) {
+              if (err) {
+                //log the error
+                //TODO Create Log Class
+              } else {
+                //suscribe the new user to the gameRoom
+                sails.sockets.join(req, req.param('gameGuid'));
+                //tell the others of the room a new player join them
+                sails.sockets.broadcast(req.param('gameGuid'), 'newPlayerJoin', {user: req.param('newPlayer')})
+                res.ok()
               }
-            );
+            });
           });
       }
   },
@@ -59,7 +68,6 @@ module.exports = {
   joinGame: function (req,res) {
     if (req.isSocket) {
       Game.find({guid: req.param('gameGuid')}).exec(function (err, game) {
-        console.log(game);
         User.update({id: req.session.me}, {currentGame: game.id}).exec(function (err, data) {
           sails.sockets.join(req, req.param('gameGuid'));
             sails.sockets.broadcast(req.param('gameGuid'), 'newPlayerJoin', {user: 'test'})
