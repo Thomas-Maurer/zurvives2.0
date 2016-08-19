@@ -56,13 +56,14 @@ module.exports.routes = {
   'GET /logout': 'UserController.logout',
   'GET /games/getGamesRunning': 'GameController.getGamesRunning',
   'GET /games/checkPlayerTurn': 'GameController.checkPlayerTurn',
-  'POST /games/update': 'GameController.update',
+  'POST /games/joinGame': 'GameController.joinGame',
   'GET /games/play/:gameGuid': {
     view: 'currentGame/currentGame',
     controller: 'GameController',
     action: 'joinGame'},
   'POST /games/create': 'GameController.create',
   'POST /games/play/mapLoaded': 'GameController.mapLoaded',
+  'GET /games/newPlayer': 'GameController.newPlayer',
   'GET /games/getCurrentGame': 'GameController.getCurrentGame'
 
 

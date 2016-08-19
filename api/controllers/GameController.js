@@ -24,18 +24,23 @@ module.exports = {
         }
 
         //suscribe the creator of the Game to the room
-        sails.sockets.join(req, req.param('guid'));
+        sails.sockets.join(req, req.param('guid'), function(err) {
+        if (err) {
+          return res.serverError(err);
+          console.log(err);
+        }
         //send to all clients that a game has been created
         sails.sockets.blast('newGameCreated');
         //return the game object
         return res.json(game);
+      });
       })
 
     } else {
 
     }
   },
-  update: function (req, res) {
+  joinGame: function (req, res) {
       if (req.isSocket) {
           Game.find({guid: req.param('gameGuid')})
           .populate('listPlayers')
@@ -47,39 +52,34 @@ module.exports = {
             game.listPlayers.add(req.param('newPlayer'));
             game.listChar.add(req.param('charSelected'));
 
-            game.save({ populate: false },function afterUpdate(err) {
+            game.save(function afterUpdate(err) {
               if (err) {
                 //log the error
                 //TODO Create Log Class
+                console.log(err);
               } else {
-                //suscribe the new user to the gameRoom
-                sails.sockets.join(req, req.param('gameGuid'));
-                //tell the others of the room a new player join them
-                sails.sockets.broadcast(req.param('gameGuid'), 'newPlayerJoin', {user: req.param('newPlayer')})
-                res.ok()
+                res.ok();
               }
             });
           });
       }
   },
+  newPlayer: function (req, res) {
+    console.log('newPlayer ' + sails.sockets.getId(req));
+    //suscribe the new user to the gameRoom
+    sails.sockets.join(req, req.param('gameGuid'));
+    //tell the others of the room a new player join them
+    sails.sockets.broadcast(req.param('gameGuid'), 'newPlayerJoin', {user: req.param('newPlayer')});
+    res.ok(req.param('gameGuid'));
+  },
   mapLoaded: function (req, res) {
     console.log(req.param('game'));
-  },
-  joinGame: function (req,res) {
-    if (req.isSocket) {
-      Game.find({guid: req.param('gameGuid')}).exec(function (err, game) {
-        User.update({id: req.session.me}, {currentGame: game.id}).exec(function (err, data) {
-          sails.sockets.join(req, req.param('gameGuid'));
-            sails.sockets.broadcast(req.param('gameGuid'), 'newPlayerJoin', {user: 'test'})
-        });
-      });
-    }else {
-    }
   },
   getGamebyName: function (req,res) {
 
   },
   getCurrentGame: function (req,res) {
+    console.log(sails.sockets.getId(req));
     User.findOne({id: req.session.me})
         .populate('currentGame')
         .exec(function (err, user) {

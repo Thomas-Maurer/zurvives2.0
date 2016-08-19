@@ -8,9 +8,7 @@ zurvives.directive('board', function($http, boardData) {
   return directive;
 
   function link($scope, element, attrs) {
-    $scope.$on('$destroy', function (event) {
-      io.socket.removeAllListeners();
-    });
+
     boardData.getJson().then(function(data) {
       boardData.setJson(data);
       boardData.getLayers();
@@ -164,11 +162,9 @@ zurvives.directive('board', function($http, boardData) {
         }
 
         //Emit event when map fully loaded
-        debugger;
         io.socket.get('/games/getCurrentGame', function (data) {
           io.socket.post('/games/play/mapLoaded', {game: data}, function (data) {
             console.log(data);
-            debugger;
           });
         });
 
@@ -268,7 +264,7 @@ zurvives.directive('board', function($http, boardData) {
               var data = {player: {name: player.name, x: player.x, y: player.y, zone: player.Zone}, slug: $scope.$parent.slug};
 
               io.socket.post('/game/player/move', data, function (res) {
-                
+
               });
 
             } else {

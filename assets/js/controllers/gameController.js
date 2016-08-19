@@ -47,11 +47,6 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       $scope.players = currentGame.data.listPlayers;
       $scope.currentGame = currentGame.data;
     })
-
-
-    $scope.$on('$destroy', function (event) {
-        socket.removeAllListeners();
-    });
 //Return true if its the player turn
     $scope.checkIfPlayerTurn = function () {
       var defer = $q.defer();
@@ -81,6 +76,18 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       });
     };
 
+    /* == Socket Actions =*/
+
+    io.socket.on('newPlayerJoin', function (newPlayer) {
+      $scope.getCurrentGameInfo().then(function (currentGame){
+        userServices.then(function (currentUser){
+          $scope.user = currentUser.data;
+          toastr["info"]("New player : " + newPlayer.user.email + " has joined the game");
+        });
+        $scope.players = currentGame.data.listPlayers;
+        $scope.currentGame = currentGame.data;
+      })
+    });
 
     /* == Movements = */
 

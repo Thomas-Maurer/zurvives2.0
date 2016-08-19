@@ -27,7 +27,8 @@
     "bootstrap-material-design": "~0.3.0",
     "angular-toastr": "~1.7.0",
     "angular-underscore-module": "^1.0.3",
-    "EaselJS": "~0.8.2"
+    "EaselJS": "~0.8.2",
+    "angular-ui-router": "^0.3.1"
   },
   "resolutions": {
     "angular": "1.5.8"

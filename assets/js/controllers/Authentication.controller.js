@@ -8,7 +8,6 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
   $scope.signupForm.loading = false;
   $scope.logged = false;
 
-
   //Return user information to check if he is connected or not
   $scope.getConnectedUserInfo = function () {
     var defer = $q.defer();
@@ -150,10 +149,6 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
         .finally(function eitherWay(){
           $scope.signupForm.loading = false;
         });
-  };
-
-  $scope.goToDashboard = function (){
-    $window.location.href = "/user/dashboard";
   };
 
   io.socket.on('userUnauthorized', function (data) {

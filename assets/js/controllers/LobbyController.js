@@ -1,4 +1,4 @@
-zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $window, $uibModal){
+zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $window, $uibModal, $state){
   $scope.listCurrentGames = [];
   $scope.selectedChar = {};
   $scope.connectedUser = {};
@@ -60,6 +60,7 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
     return defer.promise;
   };
 
+//create Game
   $scope.openModalChooseChar = function () {
     var modalInstance = $uibModal.open({
       animation: true,
@@ -77,7 +78,8 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
         console.log($scope.connectedUser);
         io.socket.post('/games/create',{guid: gameGuid, name: 'gameName', listChar: [$scope.selectedChar], listPlayers: [$scope.connectedUser]} ,function (resData, jwres){
           //Connect the user to the game he creates
-          $window.location.href = "/games/play/" + gameGuid;
+          //$window.location.href = "/games/play/" + gameGuid;
+          $state.go('currentGame', {gameGuid: gameGuid});
         });
       }
 
@@ -109,8 +111,11 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
       if (selectedChar !== null) {
         //get the char the user choose
         $scope.selectedChar = selectedChar;
-        io.socket.post('/games/update/', {gameGuid: gameGuid, charSelected: $scope.selectedChar, newPlayer: $scope.connectedUser},function (resData, jwres){
-          $window.location.href = "/games/play/" + gameGuid;
+        io.socket.post('/games/joinGame/', {gameGuid: gameGuid, charSelected: $scope.selectedChar, newPlayer: $scope.connectedUser},function (resData, jwres){
+          io.socket.get('/games/newPlayer/', {gameGuid: gameGuid, newPlayer: $scope.connectedUser}, function (resData, jwres){
+            $state.go('currentGame', {gameGuid: gameGuid});
+          });
+
         });
       }
 
@@ -138,6 +143,7 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
   //On new game refresh the lobby
   io.socket.on('newGameCreated', function () {
     console.log("new Game Created");
+    $scope.myCharactersList = [];
     $scope.init();
   });
 

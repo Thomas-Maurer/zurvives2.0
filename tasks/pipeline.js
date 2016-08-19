@@ -36,6 +36,7 @@ var jsFilesToInject = [
   'bower_components/angular/angular.js',
   'bower_components/angular-route/angular-route.js',
   'bower_components/angular-animate/angular-animate.js',
+  'bower_components/angular-ui-router/release/angular-ui-router.js',
   'bower_components/bootstrap-material-design/dist/js/material.js',
   'bower_components/bootstrap-material-design/dist/js/ripples.js',
   'bower_components/bootstrap/dist/js/boostrap.js',

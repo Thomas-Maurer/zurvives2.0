@@ -6,23 +6,23 @@
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    
-    <!--  
+
+    <!--
         Stylesheets and Preprocessors
         ==============================
 
         You can always bring in CSS files manually with `<link>` tags, or asynchronously
-        using a solution like AMD (RequireJS).  Or, if you like, you can take advantage 
+        using a solution like AMD (RequireJS).  Or, if you like, you can take advantage
         of Sails' conventional asset pipeline (boilerplate Gruntfile).
 
         By default, stylesheets from your `assets/styles` folder are included
         here automatically (between STYLES and STYLES END). Both CSS (.css) and LESS (.less)
         are supported. In production, your styles will be minified and concatenated into
         a single file.
-        
+
         To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
         For example, here are a few things you could do:
-            
+
             + Change the order of your CSS files
             + Import stylesheets from other directories
             + Use a different or additional preprocessor, like SASS, SCSS or Stylus
@@ -44,40 +44,40 @@
   </head>
 
   <body>
-  <div class="header">
-    <div ng-controller="AuthenticationController">
-    <form ng-show="!logged" ng-submit="submitLoginForm()" class="navbar-form navbar-right">
-      <div class="form-group">
-        <input ng-model="loginForm.email" type="text" placeholder="Email" name="email" class="form-control">
-      </div>
-      <div class="form-group">
-        <input ng-model="loginForm.password" type="password" placeholder="Password" name="password" class="form-control">
-      </div>
-      <button type="submit" class="btn btn-success">
-        <span ng-show="!loginForm.loading">Sign in</span>
-        <span ng-show="loginForm.loading" class="fa fa-spinner"></span>
-        <span ng-show="loginForm.loading">Signing in...</span>
-      </button>
-      <input type="hidden" name="_csrf" value="<%= _csrf %>" />
-    </form>
-      <div ng-show="logged">
-        <button ng-click="goToDashboard()" type="submit" class="navbar-right btn btn-success">
-          <span>DashBoard</span>
+
+    <div class="header">
+      <div ng-controller="AuthenticationController">
+      <form ng-show="!logged" ng-submit="submitLoginForm()" class="navbar-form navbar-right">
+        <div class="form-group">
+          <input ng-model="loginForm.email" type="text" placeholder="Email" name="email" class="form-control">
+        </div>
+        <div class="form-group">
+          <input ng-model="loginForm.password" type="password" placeholder="Password" name="password" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-success">
+          <span ng-show="!loginForm.loading">Sign in</span>
+          <span ng-show="loginForm.loading" class="fa fa-spinner"></span>
+          <span ng-show="loginForm.loading">Signing in...</span>
         </button>
-        <form ng-submit="submitLogoutForm()" class="navbar-form navbar-right">
-          <button type="submit" class="btn btn-success">
-            <span ng-show="!logoutForm.loading">Logout</span>
-            <span ng-show="logoutForm.loading" class="fa fa-spinner"></span>
-            <span ng-show="logoutForm.loading">Logout...</span>
+        <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+      </form>
+        <div ng-show="logged">
+          <button ui-sref='userDashboard' type="submit" class="navbar-right btn btn-success">
+            <span>DashBoard</span>
           </button>
-          <input type="hidden" name="_csrf" value="<%= _csrf %>" />
-        </form>
+          <form ng-submit="submitLogoutForm()" class="navbar-form navbar-right">
+            <button type="submit" class="btn btn-success">
+              <span ng-show="!logoutForm.loading">Logout</span>
+              <span ng-show="logoutForm.loading" class="fa fa-spinner"></span>
+              <span ng-show="logoutForm.loading">Logout...</span>
+            </button>
+            <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-
   <div class="content">
-    <%- body %>
+    <ui-view></ui-view>
   </div>
 
 
@@ -95,7 +95,7 @@
         By default, your Gruntfile is configured to automatically load and precompile
         client-side JST templates in your `assets/templates` folder, then
         include them here automatically (between TEMPLATES and TEMPLATES END).
-        
+
         To customize this behavior to fit your needs, just edit `tasks/pipeline.js`.
         For example, here are a few things you could do:
 
@@ -116,17 +116,17 @@
       ========================
 
       You can always bring in JS files manually with `script` tags, or asynchronously
-      on the client using a solution like AMD (RequireJS).  Or, if you like, you can 
+      on the client using a solution like AMD (RequireJS).  Or, if you like, you can
       take advantage of Sails' conventional asset pipeline (boilerplate Gruntfile).
 
       By default, files in your `assets/js` folder are included here
       automatically (between SCRIPTS and SCRIPTS END).  Both JavaScript (.js) and
       CoffeeScript (.coffee) are supported. In production, your scripts will be minified
       and concatenated into a single file.
-      
+
       To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
       For example, here are a few things you could do:
-          
+
           + Change the order of your scripts
           + Import scripts from other directories
           + Use a different preprocessor, like TypeScript
@@ -139,6 +139,7 @@
     <script src="/bower_components/angular/angular.js"></script>
     <script src="/bower_components/angular-route/angular-route.js"></script>
     <script src="/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="/bower_components/bootstrap-material-design/dist/js/material.js"></script>
     <script src="/bower_components/bootstrap-material-design/dist/js/ripples.js"></script>
     <script src="/bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
