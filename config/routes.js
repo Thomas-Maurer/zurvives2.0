@@ -38,9 +38,6 @@ module.exports.routes = {
   '/topUsers': {
     view: 'topUsers'
   },
-  '/games/lobby': {
-    view: 'currentGame/listGames'
-  },
   'POST /character': {},
   'GET /user/character/create':{
     view: 'character/create',
@@ -48,7 +45,6 @@ module.exports.routes = {
     action: "me"
   },
   'GET /currentGame/gameConfig': {view: 'currentGame/gameConfig', locals: {layout: 'currentGame/gameConfig'}},
-  'GET /user/dashboard': {view: 'user/dashboard', controller: 'UserController', action: "dashboard"},
   'GET /signup': {view: 'signup', locals: {layout: 'signup'}},
   'PUT /login': 'UserController.login',
   'POST /signup': 'UserController.signup',
@@ -57,13 +53,8 @@ module.exports.routes = {
   'GET /games/getGamesRunning': 'GameController.getGamesRunning',
   'GET /games/checkPlayerTurn': 'GameController.checkPlayerTurn',
   'POST /games/joinGame': 'GameController.joinGame',
-  'GET /games/play/:gameGuid': {
-    view: 'currentGame/currentGame',
-    controller: 'GameController',
-    action: 'joinGame'},
   'POST /games/create': 'GameController.create',
   'POST /games/play/mapLoaded': 'GameController.mapLoaded',
-  'GET /games/newPlayer': 'GameController.newPlayer',
   'GET /games/getCurrentGame': 'GameController.getCurrentGame'
 
 

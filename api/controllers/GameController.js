@@ -22,19 +22,13 @@ module.exports = {
         if (!game) {
           return res.json(404, null);
         }
-
         //suscribe the creator of the Game to the room
-        sails.sockets.join(req, req.param('guid'), function(err) {
-        if (err) {
-          return res.serverError(err);
-          console.log(err);
-        }
+        sails.sockets.join(sails.sockets.getId(req), req.param('guid'));
         //send to all clients that a game has been created
         sails.sockets.blast('newGameCreated');
         //return the game object
         return res.json(game);
       });
-      })
 
     } else {
 
@@ -58,28 +52,25 @@ module.exports = {
                 //TODO Create Log Class
                 console.log(err);
               } else {
+                //tell the others of the room a new player join them
+                sails.sockets.broadcast(req.param('gameGuid'), 'Games:newPlayerJoin', {user: req.param('newPlayer')});
+                //suscribe the new user to the gameRoom
+                sails.sockets.join(sails.sockets.getId(req), req.param('gameGuid'));
                 res.ok();
               }
             });
           });
       }
   },
-  newPlayer: function (req, res) {
-    console.log('newPlayer ' + sails.sockets.getId(req));
-    //suscribe the new user to the gameRoom
-    sails.sockets.join(req, req.param('gameGuid'));
-    //tell the others of the room a new player join them
-    sails.sockets.broadcast(req.param('gameGuid'), 'newPlayerJoin', {user: req.param('newPlayer')});
-    res.ok(req.param('gameGuid'));
-  },
   mapLoaded: function (req, res) {
-    console.log(req.param('game'));
+    //console.log(req.param('game'));
+    //Fire an event when the map is fully loaded for a player
+    //Allow him to play after the map is loaded
   },
   getGamebyName: function (req,res) {
 
   },
   getCurrentGame: function (req,res) {
-    console.log(sails.sockets.getId(req));
     User.findOne({id: req.session.me})
         .populate('currentGame')
         .exec(function (err, user) {

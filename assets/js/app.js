@@ -14,14 +14,23 @@ zurvives.config(function($routeProvider, $locationProvider, $stateProvider) {
         })
         .state('userDashboard', {
           url: '/user/dashboard',
-          templateUrl: '/templates/user/dashboard.ejs'
+          templateUrl: '/templates/user/dashboard.ejs',
+          onExit: removeAll
         })
         .state('gamesList', {
           url: '/games/lobby',
-          templateUrl: '/templates/currentGame/listGames.ejs'
+          templateUrl: '/templates/currentGame/listGames.ejs',
+          onExit: removeAll
         })
         .state('currentGame', {
           url: "/games/play/:gameGuid",
-          templateUrl: '/templates/currentGame/currentGame.ejs'
+          templateUrl: '/templates/currentGame/currentGame.ejs',
+          controller: 'gameController',
+          onExit: removeAll
+
         });
+
+        var removeAll = function () {
+          io.socket.removeAllListeners();
+        };
 });

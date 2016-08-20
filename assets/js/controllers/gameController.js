@@ -8,6 +8,10 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     $scope.alreadyMove = false;
     $scope.alreadyLoot = false;
 
+    $scope.$on('$destroy', function() {
+      io.socket.removeAllListeners();
+    });
+
     toastr.options = {
       "closeButton": false,
       "debug": false,
@@ -25,6 +29,7 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       "showMethod": "fadeIn",
       "hideMethod": "fadeOut"
     };
+
     //Return Game informations
     $scope.getCurrentGameInfo = function () {
       var defer = $q.defer();
@@ -77,16 +82,12 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     };
 
     /* == Socket Actions =*/
-
-    io.socket.on('newPlayerJoin', function (newPlayer) {
-      $scope.getCurrentGameInfo().then(function (currentGame){
-        userServices.then(function (currentUser){
-          $scope.user = currentUser.data;
-          toastr["info"]("New player : " + newPlayer.user.email + " has joined the game");
-        });
-        $scope.players = currentGame.data.listPlayers;
-        $scope.currentGame = currentGame.data;
-      })
+    io.socket.on('Games:newPlayerJoin', function (newPlayer) {
+      newPlayer = newPlayer.user;
+      if(_.findIndex($scope.players, {email: newPlayer.email}) === -1) {
+        toastr["info"]("New player : " + newPlayer.email + " has joined the game");
+        $scope.players.push(newPlayer);
+      }
     });
 
     /* == Movements = */

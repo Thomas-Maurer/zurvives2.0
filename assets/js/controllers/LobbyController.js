@@ -4,6 +4,10 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
   $scope.connectedUser = {};
   $scope.myCharactersList = [];
 
+  $scope.$on('$destroy', function() {
+    io.socket.removeAllListeners();
+  });
+
 //Load All data we need before load other function
   $scope.init = function () {
     var defer = $q.defer();
@@ -75,10 +79,8 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
         //get the char the user choose
         $scope.selectedChar = selectedChar;
         var gameGuid = guid();
-        console.log($scope.connectedUser);
         io.socket.post('/games/create',{guid: gameGuid, name: 'gameName', listChar: [$scope.selectedChar], listPlayers: [$scope.connectedUser]} ,function (resData, jwres){
           //Connect the user to the game he creates
-          //$window.location.href = "/games/play/" + gameGuid;
           $state.go('currentGame', {gameGuid: gameGuid});
         });
       }
@@ -112,10 +114,7 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
         //get the char the user choose
         $scope.selectedChar = selectedChar;
         io.socket.post('/games/joinGame/', {gameGuid: gameGuid, charSelected: $scope.selectedChar, newPlayer: $scope.connectedUser},function (resData, jwres){
-          io.socket.get('/games/newPlayer/', {gameGuid: gameGuid, newPlayer: $scope.connectedUser}, function (resData, jwres){
-            $state.go('currentGame', {gameGuid: gameGuid});
-          });
-
+          $state.go('currentGame', {gameGuid: gameGuid});
         });
       }
 

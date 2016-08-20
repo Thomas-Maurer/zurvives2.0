@@ -2,14 +2,16 @@ zurvives.directive('board', function($http, boardData) {
   var directive = {
     link: link,
     scope: true,
-    restrict: 'AEC',
-    controller: 'gameController'
+    restrict: 'AEC'
   };
   return directive;
 
   function link($scope, element, attrs) {
 
     boardData.getJson().then(function(data) {
+      $scope.$on('$destroy', function() {
+        io.socket.removeAllListeners();
+      });
       boardData.setJson(data);
       boardData.getLayers();
       boardData.transformLayers();
