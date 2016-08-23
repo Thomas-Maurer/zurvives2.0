@@ -53,6 +53,7 @@ module.exports.routes = {
   'GET /games/getGamesRunning': 'GameController.getGamesRunning',
   'GET /games/checkPlayerTurn': 'GameController.checkPlayerTurn',
   'POST /games/joinGame': 'GameController.joinGame',
+  'POST /games/leaveGame': 'GameController.leaveGame',
   'POST /games/create': 'GameController.create',
   'POST /games/play/mapLoaded': 'GameController.mapLoaded',
   'GET /games/getCurrentGame': 'GameController.getCurrentGame'

@@ -1,5 +1,5 @@
 
-zurvives.controller('gameController', function ($scope, $location, $http, $q, userServices, toastr) {
+zurvives.controller('gameController', function ($scope, $location, $http, $q, userServices, toastr, $state) {
     $scope.players = [];
     $scope.listplayer = [];
     $scope.listZombies = [];
@@ -64,7 +64,7 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     $scope.canPerformAction = function () {
         return $scope.actions > 0;
     };
-//End the currentPlayer Turn
+    //End the currentPlayer Turn
     $scope.endTurn = function () {
       $scope.checkIfPlayerTurn().then(function (currentPlayerTurn) {
         if (currentPlayerTurn) {
@@ -80,6 +80,13 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
         }
       });
     };
+    //leave the game
+    $scope.leaveGame = function () {
+      io.socket.post('/games/leaveGame', {player: $scope.user, gameGuid: $scope.currentGame.guid}, function (data) {
+        //Leave the current Game
+        $state.go('userDashboard');
+      })
+    };
 
     /* == Socket Actions =*/
     io.socket.on('Games:newPlayerJoin', function (newPlayer) {
@@ -90,6 +97,13 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       }
     });
 
+    io.socket.on('Games:playerLeave', function (Player) {
+      Player = Player.user;
+      if(_.findIndex($scope.players, {email: Player.email}) !== -1) {
+        toastr["info"]("Player : " + Player.email + " has leave the game");
+        $scope.players = _.reject($scope.players, {id: Player.id});
+      }
+    });
     /* == Movements = */
 
 

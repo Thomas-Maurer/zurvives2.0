@@ -103,6 +103,33 @@ module.exports = {
 
     }
   },
+  leaveGame: function (req, res) {
+    if (req.isSocket) {
+      Game.find({guid: req.param('gameGuid')})
+      .populate('listPlayers')
+      .populate('listChar')
+      .exec(function (err, game) {
+        game = game[0];
+        delete req.param('player').characters;
+        //delete new player and char to the gameInfo
+        game.listPlayers.remove(req.param('player').id);
+        game.listChar.remove(_.where(game.listChar,{user: req.param('player').id})[0].id);
+        game.save(function afterUpdate(err, game) {
+          if (err) {
+            //log the error
+            //TODO Create Log Class
+            console.log(err);
+          } else {
+            //unsuscribe the user to the gameRoom
+            sails.sockets.leave(sails.sockets.getId(req), req.param('gameGuid'));
+            //tell the others of the room a player left them
+            sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerLeave', {user: req.param('player')});
+            res.ok();
+          }
+        });
+      });
+    }
+  },
   checkPlayerTurn: function (req, res) {
     if (req.isSocket) {
       var playerTurnEmail,
