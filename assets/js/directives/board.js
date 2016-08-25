@@ -2,8 +2,7 @@ zurvives.directive('board', function($http, boardData) {
   var directive = {
     link: link,
     scope: false,
-    restrict: 'AEC',
-    controller: 'gameController'
+    restrict: 'AEC'
   };
   return directive;
 

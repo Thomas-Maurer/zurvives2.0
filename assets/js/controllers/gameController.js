@@ -109,7 +109,7 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       $scope.initPlayer($scope.color, $scope.user.email);
     });
     /* == Movements = */
-
+    console.log('coucou');
 
     /* == Loot = */
 
