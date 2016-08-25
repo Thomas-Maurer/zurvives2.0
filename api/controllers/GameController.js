@@ -60,12 +60,15 @@ module.exports = {
               }
             });
           });
+      }else {
+        return res.redirect('/user/dashboard');
       }
   },
   mapLoaded: function (req, res) {
     //console.log(req.param('game'));
     //Fire an event when the map is fully loaded for a player
     //Allow him to play after the map is loaded
+    sails.sockets.broadcast(sails.sockets.getId(req), 'Games:mapLoaded');
   },
   getGamebyName: function (req,res) {
 

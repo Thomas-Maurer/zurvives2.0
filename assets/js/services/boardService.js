@@ -5,7 +5,7 @@ zurvives.factory('boardData', function($http, $q){
     },
     getJson: function(){
       var deferred = $q.defer();
-      $http({method: 'GET', url: '/board/data/board.json'}).
+      $http({method: 'GET', url: '/data/board.json'}).
       success(function(data, status, headers, config){
         deferred.resolve(data)
       }).

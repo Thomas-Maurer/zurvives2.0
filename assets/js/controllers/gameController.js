@@ -104,6 +104,10 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
         $scope.players = _.reject($scope.players, {id: Player.id});
       }
     });
+
+    io.socket.on('Games:mapLoaded', function (Player) {
+      $scope.initPlayer($scope.color, $scope.user.email);
+    });
     /* == Movements = */
 
 

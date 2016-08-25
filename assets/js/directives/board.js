@@ -1,17 +1,15 @@
 zurvives.directive('board', function($http, boardData) {
   var directive = {
     link: link,
-    scope: true,
-    restrict: 'AEC'
+    scope: false,
+    restrict: 'AEC',
+    controller: 'gameController'
   };
   return directive;
 
   function link($scope, element, attrs) {
 
     boardData.getJson().then(function(data) {
-      $scope.$on('$destroy', function() {
-        io.socket.removeAllListeners();
-      });
       boardData.setJson(data);
       boardData.getLayers();
       boardData.transformLayers();
@@ -85,13 +83,19 @@ zurvives.directive('board', function($http, boardData) {
                   var results = name.match(/(\d+|\D+)/g);
                   switch(name) {
                     case "Collision":
-                      eval('cellBitmap. ' + results[0] + ' = true');
+                      cellBitmap[results[0]] = true;
                       break;
-                    case "SpawnZombie":
-                      eval('cellBitmap. ' + results[0] + ' = true');
+                    case "SpawnZombies":
+                      cellBitmap[results[0]] = true;
                       zoneZombies.push(cellBitmap);
                       break;
                     default:
+                      if (name.match(/([Zz](one))\d+/g) !== null) {
+                        cellBitmap[results[0]] = results[1];
+                        cellBitmap['neighbors'] = [];
+                        cellBitmap['noise'] = 0;
+                        zones.push(cellBitmap);
+                      }
                       eval('cellBitmap. ' + results[0] + ' = results[1]');
                       break;
                   }
@@ -179,12 +183,13 @@ zurvives.directive('board', function($http, boardData) {
         player = new createjs.Shape();
         player.graphics.beginFill(color).drawCircle(0,0,10);
         //moveTo(player, 34, 0);
-        player.x = 34*tileSize + tileSize/2;
-        player.y = tileSize/2;
         player.Zone = 19;
+        var currentZone = _.findWhere(zones, {Zone: player.Zone.toString()});
+        player.x = currentZone.x + tileSize/2;
+        player.y = currentZone.y + tileSize/2;
         player.name = username;
 
-        var currentZone = _.findWhere(zones, {zone: player.Zone.toString()});
+
         currentZone.noise++;
 
         //Add player to scope
@@ -254,16 +259,16 @@ zurvives.directive('board', function($http, boardData) {
             var isNeighboor = $.inArray(parseInt(e.currentTarget.Zone), eval('neighboorZones[' + player.Zone + ']'));
 
             if(e.currentTarget.Zone && e.currentTarget.Zone !== player.Zone && isNeighboor !== -1 ) {
-              var currentZone = _.findWhere(zones, {zone: player.Zone.toString()});
+              var currentZone = _.findWhere(zones, {Zone: player.Zone.toString()});
               currentZone.noise--;
 
               player.Zone = e.currentTarget.Zone;
 
-              currentZone = _.findWhere(zones, {zone: player.Zone.toString()});
+              currentZone = _.findWhere(zones, {Zone: player.Zone.toString()});
               currentZone.noise++;
               $scope.moveTo(player, (e.currentTarget.x/tileSize), (e.currentTarget.y/tileSize));
 
-              var data = {player: {name: player.name, x: player.x, y: player.y, zone: player.Zone}, slug: $scope.$parent.slug};
+              var data = {player: {name: player.name, x: player.x, y: player.y, Zone: player.Zone}, slug: $scope.$parent.slug};
 
               io.socket.post('/game/player/move', data, function (res) {
 
@@ -366,34 +371,31 @@ zurvives.directive('board', function($http, boardData) {
       };
 
       function fillNeighboors() {
-        var element;
-        var col;
-        var row;
-        var tiles = container.children;
-        var first_iteration = true;
-        for (var i = 0; i < tiles.length; i++) {
-          element = tiles[i].name.split(/_|-/);
-          col = element[1];
-          row = element[2];
-          if(tiles[i].Zone) {
-            checkNeighboors(tiles[i], col, row);
-            var zone = new Zone(tiles[i].Zone, col, row);
-            if(first_iteration) {
-              zones.push(zone);
-              first_iteration = false;
-            }
-            if(!_.findWhere(zones, {zone: tiles[i].Zone})) {
-              zones.push(zone);
-            }
-          }
-        };
-        for (var b = 0; b < zones.length; b++) {
-          for (var c = 0; c < neighboorZones[parseInt(zones[b].zone)].length; c++) {
-            zones[b].neighbors.push(_.findWhere(zones, { zone: neighboorZones[parseInt(zones[b].zone)][c].toString() }));
-          };
-        };
+      				var element;
+      				var col;
+      				var row;
+      				var tiles = container.children;
+      				var first_iteration = true;
+              var tilesWithZone = _.reject(tiles, function (tile) {return tile.Zone === undefined});
+      				for (var i = 0; i < tilesWithZone.length; i++) {
+      					element = tilesWithZone[i].name.split(/_|-/);
+      					col = element[1];
+      					row = element[2];
+    						checkNeighboors(tilesWithZone[i], col, row);
+    						var zone = new Zone(tilesWithZone[i].Zone, col, row);
+    						if(neighboorZones[parseInt(zone.Zone)] !== undefined) {
+                  neighboorZones[parseInt(zone.Zone)].push(zone);
+    						} else {
+                  neighboorZones[parseInt(zone.Zone)] = [zone];
+                }
+      				};
+      				for (var b = 0; b < zones.length; b++) {
+      					for (var c = 0; c < neighboorZones[parseInt(zones[b].Zone)].length; c++) {
+      						zones[b].neighbors.push(_.findWhere(zones, { Zone: neighboorZones[parseInt(zones[b].zone)][c].toString() }));
+      					};
+      				};
 
-      }
+      			}
 
       function checkNeighboors(tile, colCoord, rowCoord) {
         var colCoordonates = parseInt(colCoord);
