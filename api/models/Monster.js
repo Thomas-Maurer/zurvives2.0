@@ -19,8 +19,11 @@ module.exports = {
     },
     actionLeft: {
       type: 'string'
+    },
+    LootTable:
+    {
+      model: 'lootTable'
     }
 
   }
 };
-

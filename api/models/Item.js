@@ -15,8 +15,20 @@ module.exports = {
       model: 'quality'
     },
     price: {
-      type: 'double'
+      type: 'integer'
+    },
+    description: {
+      type: 'string'
+    },
+    weapon: {
+      model: 'weapon'
+    },
+    effects: {
+      collection: 'effect'
+    },
+    //higher number = better chance to loot the item
+    weight: {
+      type: 'integer'
     }
   }
 };
-

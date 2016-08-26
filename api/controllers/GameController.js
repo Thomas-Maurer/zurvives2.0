@@ -145,5 +145,13 @@ module.exports = {
       })
       return res.json({'playerTurn': currentPlayer === playerTurnEmail})
     }
+  },
+  movePlayer: function (req, res) {
+    if (req.isSocket) {
+      var player = req.param('player');
+      //Tell the opther one player moove exept the current player
+      sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerMove', {player: player}, req);
+      res.ok();
+    }
   }
 };

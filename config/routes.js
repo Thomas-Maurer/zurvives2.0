@@ -56,6 +56,7 @@ module.exports.routes = {
   'POST /games/leaveGame': 'GameController.leaveGame',
   'POST /games/create': 'GameController.create',
   'POST /games/play/mapLoaded': 'GameController.mapLoaded',
+  'POST /games/player/move': 'GameController.movePlayer',
   'GET /games/getCurrentGame': 'GameController.getCurrentGame'
 
 

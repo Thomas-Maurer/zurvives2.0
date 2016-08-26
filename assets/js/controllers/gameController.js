@@ -109,7 +109,43 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       $scope.initPlayer($scope.color, $scope.user.email);
     });
     /* == Movements = */
-    console.log('coucou');
+
+    $scope.canMoveTo = function canMoveTo(e) {
+      if ($scope.checkIfPlayerTurn() && $scope.canPerformAction()) {
+        if (!$scope.alreadyMove && !$scope.alreadyLoot){
+          var indexOfCurrentPlayer =_.findIndex($scope.players, _.findWhere($scope.players, {email: $scope.user.email}));
+          var isNeighboor = $.inArray(parseInt(e.currentTarget.Zone), eval('neighboorZones[' + player.Zone + ']'));
+
+          if(e.currentTarget.Zone && e.currentTarget.Zone !== player.Zone && isNeighboor !== -1 ) {
+            var currentZone = _.findWhere(zones, {Zone: player.Zone.toString()});
+            currentZone.noise--;
+
+            player.Zone = e.currentTarget.Zone;
+
+            currentZone = _.findWhere(zones, {Zone: player.Zone.toString()});
+            currentZone.noise++;
+            $scope.moveTo(player, (e.currentTarget.x/tileSize), (e.currentTarget.y/tileSize));
+
+            var data = {player: {name: player.name, x: player.x, y: player.y, Zone: player.Zone}, gameGuid: $scope.currentGame.guid};
+
+            //Tell the server the player moove
+            io.socket.post('/game/player/move', data, function (res) {
+              //Tell himself he mooves
+              toastr['info']("You have moove");
+            });
+
+          } else {
+              toastr['info']('You shall not pass');
+          }
+        }else {
+            toastr['info']('You are trying to loot');
+          $scope.lootIfYouCan(e.currentTarget.Zone, player.Zone);
+        }
+      }else {
+          toastr['info']('cannot move not your turn');
+      }
+
+    };
 
     /* == Loot = */
 

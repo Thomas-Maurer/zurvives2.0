@@ -188,7 +188,6 @@ zurvives.directive('board', function($http, boardData) {
         player.y = currentZone.y + tileSize/2;
         player.name = username;
 
-
         currentZone.noise++;
 
         //Add player to scope
@@ -249,44 +248,6 @@ zurvives.directive('board', function($http, boardData) {
 
       $scope.getZones = function () {
         return zones;
-      };
-
-      $scope.canMoveTo = function canMoveTo(e) {
-        if ($scope.checkIfPlayerTurn() && $scope.canPerformAction()) {
-          if (!$scope.alreadyMove && !$scope.alreadyLoot){
-            var indexOfCurrentPlayer =_.findIndex($scope.players, _.findWhere($scope.players, {email: $scope.user.email}));
-            var isNeighboor = $.inArray(parseInt(e.currentTarget.Zone), eval('neighboorZones[' + player.Zone + ']'));
-
-            if(e.currentTarget.Zone && e.currentTarget.Zone !== player.Zone && isNeighboor !== -1 ) {
-              var currentZone = _.findWhere(zones, {Zone: player.Zone.toString()});
-              currentZone.noise--;
-
-              player.Zone = e.currentTarget.Zone;
-
-              currentZone = _.findWhere(zones, {Zone: player.Zone.toString()});
-              currentZone.noise++;
-              $scope.moveTo(player, (e.currentTarget.x/tileSize), (e.currentTarget.y/tileSize));
-
-              var data = {player: {name: player.name, x: player.x, y: player.y, Zone: player.Zone}, slug: $scope.$parent.slug};
-
-              io.socket.post('/game/player/move', data, function (res) {
-
-              });
-
-            } else {
-              $scope.flashService.emit('You shall not pass');
-
-            }
-          }else {
-            $scope.flashService.emit('You are trying to loot');
-            //console.log("Loot Time");
-            $scope.lootIfYouCan(e.currentTarget.Zone, player.Zone);
-          }
-        }else {
-          $scope.flashService.emit('cannot move not your turn');
-          // console.log('cannot move not your turn');
-        }
-
       };
 
       $scope.findPath = function(zombieZone,loudestZone) {

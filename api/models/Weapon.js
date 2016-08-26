@@ -8,11 +8,8 @@
 module.exports = {
 
   attributes: {
-    name: {
-      type: 'string'
-    },
-    description: {
-      type: 'string'
+    item: {
+      model: 'item'
     },
     damage: {
       type: 'integer'
@@ -28,4 +25,3 @@ module.exports = {
     }
   }
 };
-
