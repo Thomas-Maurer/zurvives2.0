@@ -93,6 +93,7 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       newPlayer = newPlayer.user;
       if(_.findIndex($scope.players, {email: newPlayer.email}) === -1) {
         toastr["info"]("New player : " + newPlayer.email + " has joined the game");
+        $scope.initPlayer($scope.color, newPlayer.email);
         $scope.players.push(newPlayer);
       }
     });
@@ -109,22 +110,22 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       $scope.initPlayer($scope.color, $scope.user.email);
     });
     /* == Movements = */
-
     $scope.canMoveTo = function canMoveTo(e) {
       if ($scope.checkIfPlayerTurn() && $scope.canPerformAction()) {
+        var player = _.findWhere($scope.listplayer, {name: $scope.user.email});
         if (!$scope.alreadyMove && !$scope.alreadyLoot){
           var indexOfCurrentPlayer =_.findIndex($scope.players, _.findWhere($scope.players, {email: $scope.user.email}));
-          var isNeighboor = $.inArray(parseInt(e.currentTarget.Zone), eval('neighboorZones[' + player.Zone + ']'));
+          var isNeighboor = $.inArray(parseInt(e.currentTarget.Zone), eval('$scope.neighboorZones[' + player.Zone + ']'));
 
           if(e.currentTarget.Zone && e.currentTarget.Zone !== player.Zone && isNeighboor !== -1 ) {
-            var currentZone = _.findWhere(zones, {Zone: player.Zone.toString()});
+            var currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
             currentZone.noise--;
 
             player.Zone = e.currentTarget.Zone;
 
-            currentZone = _.findWhere(zones, {Zone: player.Zone.toString()});
+            currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
             currentZone.noise++;
-            $scope.moveTo(player, (e.currentTarget.x/tileSize), (e.currentTarget.y/tileSize));
+            $scope.moveTo(player, (e.currentTarget.x/$scope.tileSize), (e.currentTarget.y/$scope.tileSize));
 
             var data = {player: {name: player.name, x: player.x, y: player.y, Zone: player.Zone}, gameGuid: $scope.currentGame.guid};
 
@@ -152,27 +153,19 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     $scope.lootIfYouCan = function (ZoneWhereYouWantToLoot, playerZone) {
         if (!$scope.alreadyLoot) {
             if (ZoneWhereYouWantToLoot === playerZone){
-                $http.get('/api/equipment/random_equip').
-                success(function(data, status, headers, config) {
-                    $scope.alreadyLoot = true;
-                    $scope.actions--;
+              io.socket.get('/games/zone/loot', {}, function (item) {
+                if (item === null || item.name === null) {
+                  toastr['info']("You have loot nothing ");
+                } else {
+                  toastr['info']("You have loot : " + item.name);
+                }
+              });
 
-                    equipmentService.create(data.equipments.id, $scope.currentChar.id);
-                    //TODO Reload current char to update in html inventory
-                    flashService.broadcast('Char ' + $scope.user.email + ' has looted '+ data.equipments.name);
-                    flashService.emit('Char ' + $scope.user.email + ' has looted '+ data.equipments.name);
-
-                    socket.emit('player:loot:addinvotory', {user: $scope.user.email, loot: data.equipments, slug: $scope.slug} );
-                }).
-                error(function(data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                });
             }else {
-                flashService.emit("You are to far to loot");
+                toastr['info']("You are to far to loot");
             }
         }else {
-            flashService.emit('You have already loot dont be so greedy !');
+            toastr['info']('You have already loot dont be so greedy !');
 
         }
     };

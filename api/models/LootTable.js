@@ -10,6 +10,9 @@ module.exports = {
   attributes: {
     items:{
       collection: 'item'
+    },
+    name:{
+      type: 'string'
     }
   }
 };

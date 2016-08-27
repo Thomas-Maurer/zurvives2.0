@@ -81,10 +81,25 @@ module.exports.bootstrap = function(cb) {
   User.create({email: 'titi@mail.com', password: '123456', name: 'titi', points: 9900}).exec(console.log);
 
 // *---------- Create Weapons -----------*
-Item.create({name: 'Colt 1860', description: 'Old weapon from The American Civil War, use .44 ammo', quality: 1, price: 440, weapon: 1, weight: 10}).exec(console.log);;
+Item.create({name: 'Colt 1860', description: 'Old weapon from The American Civil War, use .44 ammo', quality: 1, price: 440, weapon: 1, weight: 10}).exec(console.log);
 Weapon.create({item: 1, damage: 2, range: 2, reload: false, oneHand: true}).exec(console.log);;
-Item.create({name: 'Colt 45', description: 'Old weapon from The American Civil War, use .45 ammo', quality: 1, price: 640, weapon: 2, weight: 15}).exec(console.log);;
-Weapon.create({item: 2, damage: 2, range: 2, reload: false, oneHand: true}).exec(console.log);;
+Item.create({name: 'Colt 45', description: 'Old weapon from The American Civil War, use .45 ammo', quality: 1, price: 640, weapon: 2, weight: 15}).exec(console.log);
+Weapon.create({item: 2, damage: 2, range: 2, reload: false, oneHand: true}).exec(console.log);
+Item.create({name: 'nothing', description: 'nothing usefull', quality: 0, price: 0, weapon: null, weight: 80}).exec(console.log);
+Item.create({name: null, description: null, quality: 0, price: 0, weapon: null, weight: 90}).exec(console.log);
+
+
+LootTable.create({name: 'Zombies'}).exec(function(err, lootTable) {
+  lootTable.items.add([1,2]);
+  lootTable.save();
+});
+
+LootTable.create({name: 'NoobZone'}).exec(function(err, lootTable) {
+  lootTable.items.add([1,3,4]);
+  lootTable.save();
+});
+
+Monster.create({name: 'Zombie', hp: 2, damage: 1, actionLeft: 1, LootTable: 1}).exec(console.log);
 
 cb();
 

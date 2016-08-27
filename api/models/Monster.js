@@ -18,7 +18,7 @@ module.exports = {
       type: 'integer'
     },
     actionLeft: {
-      type: 'string'
+      type: 'integer'
     },
     LootTable:
     {

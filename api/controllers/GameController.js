@@ -73,6 +73,35 @@ module.exports = {
   getGamebyName: function (req,res) {
 
   },
+  getLootFromLootTable: function (req, res) {
+    if (req.isSocket) {
+      var totalWeight = 0;
+      var rangeWeightItems = [];
+      LootTable.find()
+      .where({name: 'noobZone'})
+      .populate('items')
+      .then(function(lootTable) {
+        _.each(lootTable[0].items, function(item){
+          totalWeight = totalWeight + item.weight;
+        });
+        //return array of weight
+        rangeWeightItems = _.pluck(lootTable[0].items, 'weight');
+        var playerRoll = _.random(0, totalWeight);
+        var indexItemLooted = _.sortedIndex(rangeWeightItems, playerRoll);
+
+          console.log(lootTable[0].items[indexItemLooted]);
+          console.log(playerRoll);
+
+          if(lootTable[0].items[indexItemLooted] === undefined) {
+            //retourne item null
+            res.ok(null);
+          } else {
+            res.ok(lootTable[0].items[indexItemLooted]);
+          }
+
+      });
+      }
+  },
   getCurrentGame: function (req,res) {
     User.findOne({id: req.session.me})
         .populate('currentGame')

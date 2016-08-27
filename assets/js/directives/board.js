@@ -15,8 +15,8 @@ zurvives.directive('board', function($http, boardData) {
 
       var boardGround = boardData.layer2d["Board"];
 
-      var neighboorZones = {};
-      var zones = [];
+      $scope.neighboorZones = {};
+      $scope.zones = [];
 
       var tilesetImage = new Image();
       tilesetImage.src = '/board/images/tileset.png';
@@ -30,17 +30,17 @@ zurvives.directive('board', function($http, boardData) {
       var zonesContainer = new createjs.Container();
       zonesContainer.name = "zonesContainer";
       stage.enableMouseOver();
-      var tileSize = boardData.dataJson.tilewidth;       // The size of a tile (32×32)
-      var rowTileCount = boardData.dataJson.width;   // The number of tiles in a row of our background
-      var colTileCount = boardData.dataJson.height;   // The number of tiles in a column of our background
-      var imageNumTiles = boardData.dataJson.width;  // The number of tiles per row in the tileset image
+      $scope.tileSize = boardData.dataJson.tilewidth;       // The size of a tile (32×32)
+      $scope.rowTileCount = boardData.dataJson.width;   // The number of tiles in a row of our background
+      $scope.colTileCount = boardData.dataJson.height;   // The number of tiles in a column of our background
+      $scope.imageNumTiles = boardData.dataJson.width;  // The number of tiles per row in the tileset image
 
       var previousZoneForHovering;
 
-      $scope.boardWidth = tileSize * rowTileCount;
-      $scope.boardHeight = tileSize * colTileCount;
+      $scope.boardWidth = $scope.tileSize * $scope.rowTileCount;
+      $scope.boardHeight = $scope.tileSize * $scope.colTileCount;
 
-      var zoneZombies = [];
+      $scope.zoneZombies = [];
 
       // Get different layers from json
 
@@ -48,8 +48,8 @@ zurvives.directive('board', function($http, boardData) {
         var imageData = {
           images: [tilesetImage],
           frames: {
-            width: tileSize,
-            height: tileSize,
+            width: $scope.tileSize,
+            height: $scope.tileSize,
             spacing: 0,
             margin: 0
           }
@@ -61,18 +61,18 @@ zurvives.directive('board', function($http, boardData) {
 
         // $.each(boardData.layer2d, function(name, tiles) {
         var layerData = boardData.layer2d["Board"];
-        initLayer(layerData, tilesetsheet, tileSize);
+        initLayer(layerData, tilesetsheet, $scope.tileSize);
         // });
 
       }
 
       function initLayer(layerData, tilesetsheet, tileSize) {
-        for (var y = 0; y < rowTileCount; y++) {
-          for (var x = 0; x < colTileCount; x++) {
+        for (var y = 0; y < $scope.rowTileCount; y++) {
+          for (var x = 0; x < $scope.colTileCount; x++) {
             var cellBitmap = new createjs.Sprite(tilesetsheet);
             cellBitmap.gotoAndStop(layerData[x][y] - 1);
-            cellBitmap.x = tileSize * y;
-            cellBitmap.y = tileSize * x;
+            cellBitmap.x = $scope.tileSize * y;
+            cellBitmap.y = $scope.tileSize * x;
             cellBitmap.name = 'tile_'+x+'-'+y;
 
             $.each(boardData.layer2d, function(name, tiles) {
@@ -86,14 +86,14 @@ zurvives.directive('board', function($http, boardData) {
                       break;
                     case "SpawnZombies":
                       cellBitmap[results[0]] = true;
-                      zoneZombies.push(cellBitmap);
+                      $scope.zoneZombies.push(cellBitmap);
                       break;
                     default:
                       if (name.match(/([Zz](one))\d+/g) !== null) {
                         cellBitmap[results[0]] = results[1];
                         cellBitmap['neighbors'] = [];
                         cellBitmap['noise'] = 0;
-                        zones.push(cellBitmap);
+                        $scope.zones.push(cellBitmap);
                       }
                       eval('cellBitmap. ' + results[0] + ' = results[1]');
                       break;
@@ -142,7 +142,7 @@ zurvives.directive('board', function($http, boardData) {
         $scope.stage = stage;
         $scope.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
         fillNeighboors();
-        for (var i = 1; i <= zones.length+1; i++) {
+        for (var i = 1; i <= $scope.zones.length+1; i++) {
           var currentZoneTiles = [];
           _.each(container.children, function(tile) {
             if(tile.Zone) {
@@ -153,8 +153,8 @@ zurvives.directive('board', function($http, boardData) {
           });
           var minX = _.min(currentZoneTiles, function(zone) {return zone.x}).x;
           var minY = _.min(currentZoneTiles, function(zone) {return zone.y}).y;
-          var maxX = (_.max(currentZoneTiles, function(zone) {return zone.x}).x) + tileSize;
-          var maxY = (_.max(currentZoneTiles, function(zone) {return zone.y}).y) + tileSize;
+          var maxX = (_.max(currentZoneTiles, function(zone) {return zone.x}).x) + $scope.tileSize;
+          var maxY = (_.max(currentZoneTiles, function(zone) {return zone.y}).y) + $scope.tileSize;
           var drawnZone = new createjs.Shape();
           drawnZone.graphics.drawRect(minX, minY, (maxX-minX), (maxY-minY));
           drawnZone.zone = i;
@@ -183,9 +183,9 @@ zurvives.directive('board', function($http, boardData) {
         player.graphics.beginFill(color).drawCircle(0,0,10);
         //moveTo(player, 34, 0);
         player.Zone = 19;
-        var currentZone = _.findWhere(zones, {Zone: player.Zone.toString()});
-        player.x = currentZone.x + tileSize/2;
-        player.y = currentZone.y + tileSize/2;
+        var currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
+        player.x = currentZone.x + $scope.tileSize/2;
+        player.y = currentZone.y + $scope.tileSize/2;
         player.name = username;
 
         currentZone.noise++;
@@ -197,14 +197,14 @@ zurvives.directive('board', function($http, boardData) {
       };
 
       $scope.getSpawnZombies = function () {
-        return zoneZombies;
+        return $scope.zoneZombies;
       };
 
       $scope.initZombie = function initZombie(zone, id, broadcast) {
         zombie = new createjs.Shape();
         zombie.graphics.beginFill("red").drawCircle(0,0,10);
-        zombie.x = zone.x + tileSize/2;
-        zombie.y = zone.y + tileSize/2;
+        zombie.x = zone.x + $scope.tileSize/2;
+        zombie.y = zone.y + $scope.tileSize/2;
         zombie.Zone = zone.Zone;
         zombie.id = id;
         //Add zombie to scope
@@ -229,15 +229,15 @@ zurvives.directive('board', function($http, boardData) {
       };
 
       $scope.moveTo = function moveTo(object, x, y) {
-        object.x= x*tileSize + tileSize/2;
-        object.y =y*tileSize + tileSize/2;
+        object.x= x*$scope.tileSize + $scope.tileSize/2;
+        object.y =y*$scope.tileSize + $scope.tileSize/2;
         stage.update();
         $scope.alreadyMove = true;
       };
 
       $scope.moveToZ = function moveToZ(object, x, y, zone) {
-        object.x= x*tileSize + tileSize/2;
-        object.y =y*tileSize + tileSize/2;
+        object.x= x*$scope.tileSize + $scope.tileSize/2;
+        object.y =y*$scope.tileSize + $scope.tileSize/2;
         stage.update();
       };
       $scope.moveToBroadcast = function moveToBroadcast(object, x, y) {
@@ -247,13 +247,18 @@ zurvives.directive('board', function($http, boardData) {
       };
 
       $scope.getZones = function () {
-        return zones;
+        return $scope.zones;
       };
+
+      // Movements
+
+
+      // End Movements
 
       $scope.findPath = function(zombieZone,loudestZone) {
         var closedList = [];
-        var zZone = _.findWhere(zones, { zone: zombieZone.toString() });
-        var lZone = _.findWhere(zones, { zone: loudestZone.toString() });
+        var zZone = _.findWhere($scope.zones, { zone: zombieZone.toString() });
+        var lZone = _.findWhere($scope.zones, { zone: loudestZone.toString() });
         var openList = [zZone];
         var currentZone = zZone;
         var zonesToReset;
@@ -289,8 +294,8 @@ zurvives.directive('board', function($http, boardData) {
       }
 
       function getDistanceBetween(start, end) {
-        var xDist = Math.abs((parseInt(start.x)*tileSize) - (parseInt(end.x)*tileSize));
-        var yDist = Math.abs((parseInt(start.y)*tileSize) - (parseInt(end.y)*tileSize));
+        var xDist = Math.abs((parseInt(start.x)*$scope.tileSize) - (parseInt(end.x)*$scope.tileSize));
+        var yDist = Math.abs((parseInt(start.y)*$scope.tileSize) - (parseInt(end.y)*$scope.tileSize));
 
         return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
       }
@@ -343,15 +348,15 @@ zurvives.directive('board', function($http, boardData) {
       					row = element[2];
     						checkNeighboors(tilesWithZone[i], col, row);
     						var zone = new Zone(tilesWithZone[i].Zone, col, row);
-    						if(neighboorZones[parseInt(zone.Zone)] !== undefined) {
-                  neighboorZones[parseInt(zone.Zone)].push(zone);
+    						if($scope.neighboorZones[parseInt(zone.Zone)] !== undefined) {
+                  $scope.neighboorZones[parseInt(zone.Zone)].push(zone);
     						} else {
-                  neighboorZones[parseInt(zone.Zone)] = [zone];
+                  $scope.neighboorZones[parseInt(zone.Zone)] = [zone];
                 }
       				};
-      				for (var b = 0; b < zones.length; b++) {
-      					for (var c = 0; c < neighboorZones[parseInt(zones[b].Zone)].length; c++) {
-      						zones[b].neighbors.push(_.findWhere(zones, { Zone: neighboorZones[parseInt(zones[b].zone)][c].toString() }));
+      				for (var b = 0; b < $scope.zones.length; b++) {
+      					for (var c = 0; c < $scope.neighboorZones[parseInt($scope.zones[b].Zone)].length; c++) {
+      						$scope.zones[b].neighbors.push(_.findWhere($scope.zones, { Zone: $scope.neighboorZones[parseInt($scope.zones[b].zone)][c].toString() }));
       					};
       				};
 
@@ -386,13 +391,13 @@ zurvives.directive('board', function($http, boardData) {
         var isInArray;
 
         for (var m = 0; m < tileNeigbhoors.length; m++) {
-          isInArray = $.inArray(parseInt(tileNeigbhoors[m].Zone), eval('neighboorZones[' +tile.Zone + ']'));
+          isInArray = $.inArray(parseInt(tileNeigbhoors[m].Zone), eval('$scope.neighboorZones[' +tile.Zone + ']'));
           if(tileNeigbhoors[m].Zone && tileNeigbhoors[m].Zone !== tile.Zone) {
-            if(!(eval('neighboorZones[' + tile.Zone +']'))) {
-              eval('neighboorZones[' + tile.Zone + '] = []');
+            if(!(eval('$scope.neighboorZones[' + tile.Zone +']'))) {
+              eval('$scope.neighboorZones[' + tile.Zone + '] = []');
             }
             if(isInArray === -1) {
-              eval('neighboorZones[' + tile.Zone + '].push(parseInt(tileNeigbhoors[m].Zone))');
+              eval('$scope.neighboorZones[' + tile.Zone + '].push(parseInt(tileNeigbhoors[m].Zone))');
             }
           }
         };
