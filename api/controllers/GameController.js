@@ -34,6 +34,10 @@ module.exports = {
 
     }
   },
+  sendExistedPlayers: function (req, res) {
+    //send to the new player the current players
+    sails.sockets.broadcast(req.param('playerTosend'), 'Games:addExistPlayerTotheGame', req.param('existedPlayers'));
+  },
   joinGame: function (req, res) {
       if (req.isSocket) {
           Game.find({guid: req.param('gameGuid')})
@@ -52,6 +56,7 @@ module.exports = {
                 //TODO Create Log Class
                 console.log(err);
               } else {
+                req.param('newPlayer').socketID = sails.sockets.getId(req);
                 //tell the others of the room a new player join them
                 sails.sockets.broadcast(req.param('gameGuid'), 'Games:newPlayerJoin', {user: req.param('newPlayer')});
                 //suscribe the new user to the gameRoom
@@ -94,7 +99,12 @@ module.exports = {
 
           if(lootTable[0].items[indexItemLooted] === undefined) {
             //retourne item null
-            res.ok(null);
+            Item.findOne({name: null}).exec(function (err, item) {
+              if (err) {
+                res.badRequest();
+              }
+              res.ok(item);
+            });
           } else {
             res.ok(lootTable[0].items[indexItemLooted]);
           }
@@ -166,20 +176,22 @@ module.exports = {
     if (req.isSocket) {
       var playerTurnEmail,
       currentPlayer;
-      currentGameService.getCurrentGame(req.session.me, function callback(user) {
-        currentPlayer = user.email;
-      });
+
       currentGameService.getCurrentGame(req.session.me, function callback(game) {
+        currentPlayer = User.findOne({id: req.session.me}).email;
         playerTurnEmail = game.turnof;
-      })
-      return res.json({'playerTurn': currentPlayer === playerTurnEmail})
+        currentUserService.getCurrentUser(req.session.me, function callback(user){
+          currentPlayer = user.email;
+          return res.json({'playerTurn': currentPlayer === playerTurnEmail})
+        })
+      });
     }
   },
   movePlayer: function (req, res) {
     if (req.isSocket) {
       var player = req.param('player');
       //Tell the opther one player moove exept the current player
-      sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerMove', {player: player}, req);
+      sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerMove', player, req);
       res.ok();
     }
   }

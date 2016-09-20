@@ -196,6 +196,24 @@ zurvives.directive('board', function($http, boardData) {
         stage.update();
       };
 
+      $scope.initPlayerToMap = function initPlayerToMap(color, username, x, y, zone) {
+        player = new createjs.Shape();
+        player.graphics.beginFill(color).drawCircle(0,0,10);
+        //moveTo(player, 34, 0);
+        player.Zone = zone;
+        var currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
+        player.x = x;
+        player.y = y;
+        player.name = username;
+
+        currentZone.noise++;
+
+        //Add player to scope
+        $scope.listplayer.push(player);
+        stage.addChild(player);
+        stage.update();
+      };
+
       $scope.getSpawnZombies = function () {
         return $scope.zoneZombies;
       };
@@ -241,8 +259,8 @@ zurvives.directive('board', function($http, boardData) {
         stage.update();
       };
       $scope.moveToBroadcast = function moveToBroadcast(object, x, y) {
-        object.x= x;
-        object.y =y;
+        object.x = x;
+        object.y = y;
         stage.update();
       };
 

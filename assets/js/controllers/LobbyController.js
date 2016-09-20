@@ -75,7 +75,7 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
     });
     modalInstance.result.then(function (selectedChar) {
       //Do stuff after we close the modal
-      if (selectedChar !== null) {
+      if (selectedChar !== null && selectedChar !== undefined) {
         //get the char the user choose
         $scope.selectedChar = selectedChar;
         var gameGuid = guid();

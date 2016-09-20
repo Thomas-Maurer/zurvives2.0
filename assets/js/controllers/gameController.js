@@ -7,6 +7,7 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     $scope.actions = 3;
     $scope.alreadyMove = false;
     $scope.alreadyLoot = false;
+    $scope.mapfullyload = false;
 
     $scope.$on('$destroy', function() {
       io.socket.removeAllListeners();
@@ -90,11 +91,23 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
 
     /* == Socket Actions =*/
     io.socket.on('Games:newPlayerJoin', function (newPlayer) {
+      $scope.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
       newPlayer = newPlayer.user;
       if(_.findIndex($scope.players, {email: newPlayer.email}) === -1) {
         toastr["info"]("New player : " + newPlayer.email + " has joined the game");
+        var condensedPlayers = [];
+        _.each($scope.listplayer, function (player) {
+          var condensedPlayer = {};
+          condensedPlayer.name = player.name;
+          condensedPlayer.x = player.x;
+          condensedPlayer.Zone = player.Zone;
+          condensedPlayer.y = player.y;
+          condensedPlayers.push(condensedPlayer);
+        });
+        io.socket.post('/games/sendExistedPlayers', {existedPlayers: condensedPlayers, playerTosend: newPlayer.socketID}, function (res) {
+          $scope.players.push(newPlayer);
+        });
         $scope.initPlayer($scope.color, newPlayer.email);
-        $scope.players.push(newPlayer);
       }
     });
 
@@ -107,45 +120,63 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     });
 
     io.socket.on('Games:mapLoaded', function (Player) {
+      $scope.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
       $scope.initPlayer($scope.color, $scope.user.email);
+      $scope.mapfullyload = true;
+      _.each($scope.tempListPlayers, function (player) {
+        $scope.initPlayerToMap($scope.color, player.name, player.x, player.y, player.Zone);
+      });
     });
+
+    io.socket.on('Games:addExistPlayerTotheGame', function (Players) {
+      console.log(Players);
+      $scope.tempListPlayers = Players;
+    });
+
+    io.socket.on('Games:playerMove', function (Player) {
+      toastr['info']("Player : " + Player.name + " has mooved");debugger;
+      var playerToMove = _.findWhere($scope.listplayer, {name: Player.name});
+      $scope.moveToBroadcast(playerToMove, Player.x, Player.y);
+    });
+
     /* == Movements = */
     $scope.canMoveTo = function canMoveTo(e) {
-      if ($scope.checkIfPlayerTurn() && $scope.canPerformAction()) {
-        var player = _.findWhere($scope.listplayer, {name: $scope.user.email});
-        if (!$scope.alreadyMove && !$scope.alreadyLoot){
-          var indexOfCurrentPlayer =_.findIndex($scope.players, _.findWhere($scope.players, {email: $scope.user.email}));
-          var isNeighboor = $.inArray(parseInt(e.currentTarget.Zone), eval('$scope.neighboorZones[' + player.Zone + ']'));
+      $scope.checkIfPlayerTurn().then(function (currentPlayerTurn) {
+        if (currentPlayerTurn && $scope.canPerformAction()) {
+          var player = _.findWhere($scope.listplayer, {name: $scope.user.email});
+          if (!$scope.alreadyMove && !$scope.alreadyLoot){
+            var indexOfCurrentPlayer =_.findIndex($scope.players, _.findWhere($scope.players, {email: $scope.user.email}));
+            var isNeighboor = $.inArray(parseInt(e.currentTarget.Zone), eval('$scope.neighboorZones[' + player.Zone + ']'));
 
-          if(e.currentTarget.Zone && e.currentTarget.Zone !== player.Zone && isNeighboor !== -1 ) {
-            var currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
-            currentZone.noise--;
+            if(e.currentTarget.Zone && e.currentTarget.Zone !== player.Zone && isNeighboor !== -1 ) {
+              var currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
+              currentZone.noise--;
 
-            player.Zone = e.currentTarget.Zone;
+              player.Zone = e.currentTarget.Zone;
 
-            currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
-            currentZone.noise++;
-            $scope.moveTo(player, (e.currentTarget.x/$scope.tileSize), (e.currentTarget.y/$scope.tileSize));
+              currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
+              currentZone.noise++;
+              $scope.moveTo(player, (e.currentTarget.x/$scope.tileSize), (e.currentTarget.y/$scope.tileSize));
 
-            var data = {player: {name: player.name, x: player.x, y: player.y, Zone: player.Zone}, gameGuid: $scope.currentGame.guid};
+              var data = {player: {name: player.name, x: player.x, y: player.y, Zone: player.Zone}, gameGuid: $scope.currentGame.guid};
 
-            //Tell the server the player moove
-            io.socket.post('/game/player/move', data, function (res) {
-              //Tell himself he mooves
-              toastr['info']("You have moove");
-            });
+              //Tell the server the player moove
+              io.socket.post('/games/player/move', data, function (res) {
+                //Tell himself he mooves
+                toastr['info']("You have moove");
+              });
 
-          } else {
-              toastr['info']('You shall not pass');
+            } else {
+                toastr['info']('You shall not pass');
+            }
+          }else {
+              toastr['info']('You are trying to loot');
+            $scope.lootIfYouCan(e.currentTarget.Zone, player.Zone);
           }
         }else {
-            toastr['info']('You are trying to loot');
-          $scope.lootIfYouCan(e.currentTarget.Zone, player.Zone);
+            toastr['info']('cannot move not your turn');
         }
-      }else {
-          toastr['info']('cannot move not your turn');
-      }
-
+      });
     };
 
     /* == Loot = */
@@ -154,11 +185,13 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
         if (!$scope.alreadyLoot) {
             if (ZoneWhereYouWantToLoot === playerZone){
               io.socket.get('/games/zone/loot', {}, function (item) {
-                if (item === null || item.name === null) {
+                if (item === null || item.name === null || item === undefined) {
                   toastr['info']("You have loot nothing ");
                 } else {
                   toastr['info']("You have loot : " + item.name);
+                  //TODO tell the server the player have loot something
                 }
+                $scope.alreadyLoot = true;
               });
 
             }else {
