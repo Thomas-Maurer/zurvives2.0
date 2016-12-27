@@ -9,6 +9,7 @@ zurvives.directive('board', function($http, boardData) {
   function link($scope, element, attrs) {
 
     boardData.getJson().then(function(data) {
+      $scope.rendering = true;
       boardData.setJson(data);
       boardData.getLayers();
       boardData.transformLayers();
@@ -167,10 +168,7 @@ zurvives.directive('board', function($http, boardData) {
         }
 
         //Emit event when map fully loaded
-        io.socket.get('/games/getCurrentGame', function (data) {
-          io.socket.post('/games/play/mapLoaded', {game: data}, function (data) {
-            console.log(data);
-          });
+        io.socket.post('/games/play/mapLoaded', {game: data}, function () {                   
         });
 
       }

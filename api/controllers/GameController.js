@@ -74,6 +74,7 @@ module.exports = {
     //Fire an event when the map is fully loaded for a player
     //Allow him to play after the map is loaded
     sails.sockets.broadcast(sails.sockets.getId(req), 'Games:mapLoaded');
+    return res.json('{"success": "true"}');
   },
   getGamebyName: function (req,res) {
 

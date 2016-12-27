@@ -19,6 +19,9 @@
     </div>
   </div>
   <div id="map">
+    <div id="loader-7" ng-if="!mapfullyload"><span></span><span></span><span></span>LOADING
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
     <canvas id="board-canvas" board width="{{boardWidth}}" height="{{boardHeight}}" style="height: 100%;"></canvas>
   </div>
 </div>

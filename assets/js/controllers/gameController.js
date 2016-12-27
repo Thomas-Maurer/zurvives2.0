@@ -52,7 +52,7 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       });
       $scope.players = currentGame.data.listPlayers;
       $scope.currentGame = currentGame.data;
-    })
+    });
 //Return true if its the player turn
     $scope.checkIfPlayerTurn = function () {
       var defer = $q.defer();
@@ -122,10 +122,12 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     io.socket.on('Games:mapLoaded', function (Player) {
       $scope.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
       $scope.initPlayer($scope.color, $scope.user.email);
-      $scope.mapfullyload = true;
       _.each($scope.tempListPlayers, function (player) {
+        $scope.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
         $scope.initPlayerToMap($scope.color, player.name, player.x, player.y, player.Zone);
       });
+      $scope.mapfullyload = true;
+      $scope.$apply();
     });
 
     io.socket.on('Games:addExistPlayerTotheGame', function (Players) {

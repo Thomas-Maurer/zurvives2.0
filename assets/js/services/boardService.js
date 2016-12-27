@@ -5,14 +5,12 @@ zurvives.factory('boardData', function($http, $q){
     },
     getJson: function(){
       var deferred = $q.defer();
-      $http({method: 'GET', url: '/data/board.json'}).
-      success(function(data, status, headers, config){
-        deferred.resolve(data)
-      }).
-      error(function(data, status, headers, config){
-        deferred.reject(status)
+      $http({method: 'GET', url: '/data/board.json'})
+      .then(function successCallback(response) {
+        deferred.resolve(response.data);
+      }, function errorCallback(response) {
+        deferred.reject(response);
       });
-
       return deferred.promise;
     },
     getLayers: function() {
