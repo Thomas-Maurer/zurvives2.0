@@ -168,7 +168,7 @@ zurvives.directive('board', function($http, boardData) {
         }
 
         //Emit event when map fully loaded
-        io.socket.post('/games/play/mapLoaded', {game: data}, function () {                   
+        io.socket.post('/games/play/mapLoaded', {game: data}, function () {
         });
 
       }
@@ -176,25 +176,28 @@ zurvives.directive('board', function($http, boardData) {
       var player;
       var zombie;
 
-      $scope.initPlayer = function initPlayer(color, username) {
-        player = new createjs.Shape();
+      $scope.initPlayer = function (color, email) {
+        var player = new createjs.Shape();
+        //TODO change graphics to better one
         player.graphics.beginFill(color).drawCircle(0,0,10);
         //moveTo(player, 34, 0);
         player.Zone = 19;
         var currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
         player.x = currentZone.x + $scope.tileSize/2;
         player.y = currentZone.y + $scope.tileSize/2;
-        player.name = username;
+        player.name = email;
 
         currentZone.noise++;
-
+        //Update the position of the player character
+        _.findWhere($scope.players, {email: email}).char.myPos = {x: player.x, y: player.y, Zone: player.Zone};
         //Add player to scope
         $scope.listplayer.push(player);
+        console.log(player.name);
         stage.addChild(player);
         stage.update();
       };
 
-      $scope.initPlayerToMap = function initPlayerToMap(color, username, x, y, zone) {
+      $scope.initPlayerToMap = function (color, username, x, y, zone) {
         player = new createjs.Shape();
         player.graphics.beginFill(color).drawCircle(0,0,10);
         //moveTo(player, 34, 0);
@@ -208,6 +211,7 @@ zurvives.directive('board', function($http, boardData) {
 
         //Add player to scope
         $scope.listplayer.push(player);
+        console.log(player.name);
         stage.addChild(player);
         stage.update();
       };
@@ -256,7 +260,7 @@ zurvives.directive('board', function($http, boardData) {
         object.y =y*$scope.tileSize + $scope.tileSize/2;
         stage.update();
       };
-      $scope.moveToBroadcast = function moveToBroadcast(object, x, y) {
+      $scope.moveToBroadcast = function (object, x, y) {
         object.x = x;
         object.y = y;
         stage.update();

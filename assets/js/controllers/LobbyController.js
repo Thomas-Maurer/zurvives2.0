@@ -146,6 +146,13 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
     $scope.init();
   });
 
+  //On updated game refresh the lobby
+  io.socket.on('gameUpdated', function () {
+    console.log("one game was updated");
+    $scope.myCharactersList = [];
+    $scope.init();
+  });
+
 });
 
 zurvives.controller('ModalSelectChar', ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance, scope) {

@@ -35,8 +35,12 @@ module.exports = {
     }
   },
   sendExistedPlayers: function (req, res) {
+    console.log('Send Exist player');
+    console.log(req.param('playerTosend'));
+    console.log(req.param('existedPlayers'));
     //send to the new player the current players
     sails.sockets.broadcast(req.param('playerTosend'), 'Games:addExistPlayerTotheGame', req.param('existedPlayers'));
+    res.ok();
   },
   joinGame: function (req, res) {
       if (req.isSocket) {
@@ -56,6 +60,8 @@ module.exports = {
                 //TODO Create Log Class
                 console.log(err);
               } else {
+                //send to all clients that a game has been updated
+                sails.sockets.blast('gameUpdated');
                 req.param('newPlayer').socketID = sails.sockets.getId(req);
                 //tell the others of the room a new player join them
                 sails.sockets.broadcast(req.param('gameGuid'), 'Games:newPlayerJoin', {user: req.param('newPlayer')});
@@ -99,7 +105,7 @@ module.exports = {
           console.log(playerRoll);
 
           if(lootTable[0].items[indexItemLooted] === undefined) {
-            //retourne item null
+            //return item null
             Item.findOne({name: null}).exec(function (err, item) {
               if (err) {
                 res.badRequest();
@@ -114,20 +120,9 @@ module.exports = {
       }
   },
   getCurrentGame: function (req,res) {
-    User.findOne({id: req.session.me})
-        .populate('currentGame')
-        .exec(function (err, user) {
-          Game.find(user.currentGame.id)
-              .populate('listPlayers')
-              .populate('listChar')
-              .exec(function (err, game) {
-                //remove password from json
-                _.each(game[0].listPlayers, function(player){
-                  delete player.password;
-                });
-                return res.json(game[0]);
-              })
-        })
+    currentGameService.getCurrentGame(req.session.me, function callback(game) {
+      return res.json(game);
+    });
   },
   getGamesRunning: function (req,res) {
     if (!req.isSocket) {
@@ -152,24 +147,33 @@ module.exports = {
       .populate('listPlayers')
       .populate('listChar')
       .exec(function (err, game) {
-        game = game[0];
+        var currentGame = game[0];
         delete req.param('player').characters;
-        //delete new player and char to the gameInfo
-        game.listPlayers.remove(req.param('player').id);
-        game.listChar.remove(_.where(game.listChar,{user: req.param('player').id})[0].id);
-        game.save(function afterUpdate(err, game) {
-          if (err) {
+
+        currentGame.listPlayers = _.reject(currentGame.listPlayers, function (player) {
+          return player.id === req.param('player').id;
+        });
+
+        //Check if the game is empty
+        if (currentGame.listPlayers.length === 0) {
+          Game.destroy(currentGame.id).exec(function (err) {
             //log the error
             //TODO Create Log Class
             console.log(err);
-          } else {
-            //unsuscribe the user to the gameRoom
-            sails.sockets.leave(sails.sockets.getId(req), req.param('gameGuid'));
-            //tell the others of the room a player left them
-            sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerLeave', {user: req.param('player')});
-            res.ok();
-          }
-        });
+          });
+        } else {
+          //delete new player and char to the gameInfo
+          currentGame.listPlayers.remove(req.param('player').id);
+          currentGame.listChar.remove(_.where(currentGame.listChar,{user: req.param('player').id})[0].id);
+          currentGame.save();
+        }
+        //send to all clients that a game has been created
+        sails.sockets.blast('gameUpdated');
+        //unsuscribe the user to the gameRoom
+        sails.sockets.leave(sails.sockets.getId(req), req.param('gameGuid'));
+        //tell the others of the room a player left them
+        sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerLeave', {user: req.param('player')});
+        res.ok();
       });
     }
   },
@@ -191,9 +195,19 @@ module.exports = {
   movePlayer: function (req, res) {
     if (req.isSocket) {
       var player = req.param('player');
-      //Tell the opther one player moove exept the current player
-      sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerMove', player, req);
-      res.ok();
+
+      currentGameService.getCurrentGame(player.id, function (game) {
+        var charWhoMoved = _.findWhere(game.listChar, function (char) {
+          return char.user == player.id;
+        });
+        //Update character pos serverSide
+        charWhoMoved.myPos = {x :player.x, y: player.y, Zone: player.Zone, charPos: charWhoMoved.id};
+        charWhoMoved.save(console.log('save New Position of char '));
+
+        //Tell the opther one player move exept the current player
+        sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerMove', charWhoMoved.myPos, req);
+        res.ok();
+      });
     }
   }
 };

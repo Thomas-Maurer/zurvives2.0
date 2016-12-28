@@ -52,6 +52,9 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       });
       $scope.players = currentGame.data.listPlayers;
       $scope.currentGame = currentGame.data;
+      _.each($scope.players, function (player) {
+        player.char = _.findWhere(currentGame.data.listChar, {user: player.id});
+      });
     });
 //Return true if its the player turn
     $scope.checkIfPlayerTurn = function () {
@@ -120,29 +123,33 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     });
 
     io.socket.on('Games:mapLoaded', function (Player) {
+      var listPlayersWithoutCurrentOne = _.reject($scope.players, function (player) {
+        return player.id === $scope.user.id;
+      });
       $scope.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
       $scope.initPlayer($scope.color, $scope.user.email);
-      _.each($scope.tempListPlayers, function (player) {
+      _.each(listPlayersWithoutCurrentOne, function (player) {
         $scope.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
-        $scope.initPlayerToMap($scope.color, player.name, player.x, player.y, player.Zone);
+        $scope.initPlayerToMap($scope.color, player.name, player.char.myPos.x, player.char.myPos.y, player.char.myPos.Zone);
       });
       $scope.mapfullyload = true;
       $scope.$apply();
     });
 
     io.socket.on('Games:addExistPlayerTotheGame', function (Players) {
+      console.log('addExistPlayerTotheGame');
       console.log(Players);
       $scope.tempListPlayers = Players;
     });
 
     io.socket.on('Games:playerMove', function (Player) {
-      toastr['info']("Player : " + Player.name + " has mooved");debugger;
-      var playerToMove = _.findWhere($scope.listplayer, {name: Player.name});
+      var playerToMove = _.findWhere($scope.listplayer, {id: Player.id});
+      toastr['info']("Player : " + playerToMove.name + " has mooved");
       $scope.moveToBroadcast(playerToMove, Player.x, Player.y);
     });
 
     /* == Movements = */
-    $scope.canMoveTo = function canMoveTo(e) {
+    $scope.canMoveTo = function (e) {
       $scope.checkIfPlayerTurn().then(function (currentPlayerTurn) {
         if (currentPlayerTurn && $scope.canPerformAction()) {
           var player = _.findWhere($scope.listplayer, {name: $scope.user.email});
@@ -160,7 +167,7 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
               currentZone.noise++;
               $scope.moveTo(player, (e.currentTarget.x/$scope.tileSize), (e.currentTarget.y/$scope.tileSize));
 
-              var data = {player: {name: player.name, x: player.x, y: player.y, Zone: player.Zone}, gameGuid: $scope.currentGame.guid};
+              var data = {player: {id: $scope.user.id, name: player.name, x: player.x, y: player.y, Zone: player.Zone}, gameGuid: $scope.currentGame.guid};
 
               //Tell the server the player moove
               io.socket.post('/games/player/move', data, function (res) {

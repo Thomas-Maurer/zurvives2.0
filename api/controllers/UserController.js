@@ -65,7 +65,7 @@ module.exports = {
   },
   login: function (req, res) {
     if (!req.isSocket) {
-// Try to look up user using the provided email address
+      // Try to look up user using the provided email address
       User.findOne({
         email: req.param('email')
       }, function foundUser(err, user) {
@@ -117,6 +117,9 @@ module.exports = {
               return res.json(404, null);
             }
             delete me.password;
+            _.each(me.characters, function (char) {
+              console.log(char.myPos);
+            });
             sails.log('Found "%s"', me.email);
             return res.json(me);
           });

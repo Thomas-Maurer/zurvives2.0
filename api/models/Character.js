@@ -45,6 +45,9 @@ module.exports = {
       collection: 'charstats',
       via: 'char',
       through: 'charstats'
+    },
+    myPos: {
+      model: 'position'
     }
 
 
