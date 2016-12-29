@@ -75,7 +75,9 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
             $scope.actions = 0;
             var indexOfCurrentPlayer =_.findIndex($scope.players, _.findWhere($scope.players, {email: $scope.user.email}));
             var data = {currentplayer: indexOfCurrentPlayer, guid: $scope.currentGame.guid, actionsLeft: $scope.actions};
-            //socket.emit('game:player:endturn', data);
+            io.socket.post('/games/endPlayerTurn', data, function (result) {
+
+            });
             console.log(indexOfCurrentPlayer);
             toastr["info"]("Turn ended");
         } else {
@@ -96,22 +98,20 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     io.socket.on('Games:newPlayerJoin', function (newPlayer) {
       $scope.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
       newPlayer = newPlayer.user;
-      if(_.findIndex($scope.players, {email: newPlayer.email}) === -1) {
-        toastr["info"]("New player : " + newPlayer.email + " has joined the game");
-        var condensedPlayers = [];
-        _.each($scope.listplayer, function (player) {
-          var condensedPlayer = {};
-          condensedPlayer.name = player.name;
-          condensedPlayer.x = player.x;
-          condensedPlayer.Zone = player.Zone;
-          condensedPlayer.y = player.y;
-          condensedPlayers.push(condensedPlayer);
+
+      //Get all the info about our new player
+      $scope.getCurrentGameInfo().then(function (currentGame){
+        $scope.players = currentGame.data.listPlayers;
+        $scope.currentGame = currentGame.data;
+        _.each($scope.players, function (player) {
+          player.char = _.findWhere(currentGame.data.listChar, {user: player.id});
         });
-        io.socket.post('/games/sendExistedPlayers', {existedPlayers: condensedPlayers, playerTosend: newPlayer.socketID}, function (res) {
-          $scope.players.push(newPlayer);
-        });
-        $scope.initPlayer($scope.color, newPlayer.email);
-      }
+        //Initialise our new player on the canvas
+        if(_.findIndex($scope.players, {email: newPlayer.email}) === 1) {
+          toastr["info"]("New player : " + newPlayer.email + " has joined the game");
+          $scope.initPlayer($scope.color, newPlayer.email);
+        }
+      });
     });
 
     io.socket.on('Games:playerLeave', function (Player) {
@@ -134,12 +134,6 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       });
       $scope.mapfullyload = true;
       $scope.$apply();
-    });
-
-    io.socket.on('Games:addExistPlayerTotheGame', function (Players) {
-      console.log('addExistPlayerTotheGame');
-      console.log(Players);
-      $scope.tempListPlayers = Players;
     });
 
     io.socket.on('Games:playerMove', function (Player) {

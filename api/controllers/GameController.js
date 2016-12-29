@@ -121,6 +121,9 @@ module.exports = {
   },
   getCurrentGame: function (req,res) {
     currentGameService.getCurrentGame(req.session.me, function callback(game) {
+    //  console.log('////////////////////');
+      //console.log(game);
+    //  console.log('////////////////////');
       return res.json(game);
     });
   },
@@ -204,7 +207,7 @@ module.exports = {
         charWhoMoved.myPos = {x :player.x, y: player.y, Zone: player.Zone, charPos: charWhoMoved.id};
         charWhoMoved.save(console.log('save New Position of char '));
 
-        //Tell the opther one player move exept the current player
+        //Tell the other one player move exept the current player
         sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerMove', charWhoMoved.myPos, req);
         res.ok();
       });
