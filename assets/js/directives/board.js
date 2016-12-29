@@ -197,7 +197,7 @@ zurvives.directive('board', function($http, boardData) {
         stage.update();
       };
 
-      $scope.initPlayerToMap = function (color, username, x, y, zone) {
+      $scope.initPlayerToMap = function (color, email, x, y, zone) {
         player = new createjs.Shape();
         player.graphics.beginFill(color).drawCircle(0,0,10);
         //moveTo(player, 34, 0);
@@ -205,7 +205,7 @@ zurvives.directive('board', function($http, boardData) {
         var currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
         player.x = x;
         player.y = y;
-        player.name = username;
+        player.name = email;
 
         currentZone.noise++;
 
@@ -260,9 +260,10 @@ zurvives.directive('board', function($http, boardData) {
         object.y =y*$scope.tileSize + $scope.tileSize/2;
         stage.update();
       };
-      $scope.moveToBroadcast = function (object, x, y) {
+      $scope.moveToBroadcast = function (object, x, y, zone) {
         object.x = x;
         object.y = y;
+        object.Zone = zone;
         stage.update();
       };
 

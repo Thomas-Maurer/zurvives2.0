@@ -72,13 +72,13 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
     $scope.endTurn = function () {
       $scope.checkIfPlayerTurn().then(function (currentPlayerTurn) {
         if (currentPlayerTurn) {
-            $scope.actions = 0;
             var indexOfCurrentPlayer =_.findIndex($scope.players, _.findWhere($scope.players, {email: $scope.user.email}));
             var data = {currentplayer: indexOfCurrentPlayer, guid: $scope.currentGame.guid, actionsLeft: $scope.actions};
             io.socket.post('/games/endPlayerTurn', data, function (result) {
-
             });
-            console.log(indexOfCurrentPlayer);
+            //Reset player Action
+            $scope.actions = 3;
+            $scope.alreadyMove = false;
             toastr["info"]("Turn ended");
         } else {
             toastr["warning"]("You can't end your turn when it's not your turn GENIUS");
@@ -130,16 +130,17 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       $scope.initPlayer($scope.color, $scope.user.email);
       _.each(listPlayersWithoutCurrentOne, function (player) {
         $scope.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
-        $scope.initPlayerToMap($scope.color, player.name, player.char.myPos.x, player.char.myPos.y, player.char.myPos.Zone);
+        $scope.initPlayerToMap($scope.color, player.email, player.char.myPos.x, player.char.myPos.y, player.char.myPos.Zone);
       });
       $scope.mapfullyload = true;
       $scope.$apply();
     });
 
-    io.socket.on('Games:playerMove', function (Player) {
-      var playerToMove = _.findWhere($scope.listplayer, {id: Player.id});
+    io.socket.on('Games:playerMove', function (character) {
+      var playerToMove = _.find($scope.players, function (player) { return player.char.user === character.user;})
+      playerToMove = _.findWhere($scope.listplayer, {name: playerToMove.email});
       toastr['info']("Player : " + playerToMove.name + " has mooved");
-      $scope.moveToBroadcast(playerToMove, Player.x, Player.y);
+      $scope.moveToBroadcast(playerToMove, character.myPos.x, character.myPos.y, character.myPos.Zone);
     });
 
     /* == Movements = */

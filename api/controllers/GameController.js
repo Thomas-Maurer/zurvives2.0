@@ -193,11 +193,15 @@ module.exports = {
           nextPlayer,
           tempPlayerList;
       currentGameService.getCurrentGame(req.session.me, function callback(game) {
-        tempPlayerList = -.reject(game.listPlayers, function (player) {
-          return player.id !== req.session.me;
+        tempPlayerList = _.reject(game.listPlayers, function (player) {
+          return player.id === req.session.me;
         });
+        if (tempPlayerList === undefined) {
+          tempPlayerList = game.listPlayers[0];
+        }
         game.turnof = tempPlayerList[0].email;
-        game.save(console.log('Game save'););
+        console.log(game.turnof);
+        game.save(console.log(game));
       });
     }
   },
@@ -206,16 +210,28 @@ module.exports = {
       var player = req.param('player');
 
       currentGameService.getCurrentGame(player.id, function (game) {
-        var charWhoMoved = _.findWhere(game.listChar, function (char) {
+        var charWhoMoved = _.find(game.listChar, function (char) {
           return char.user == player.id;
         });
         //Update character pos serverSide
-        charWhoMoved.myPos = {x :player.x, y: player.y, Zone: player.Zone, charPos: charWhoMoved.id};
-        charWhoMoved.save(console.log('save New Position of char '));
-
-        //Tell the other one player move exept the current player
-        sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerMove', charWhoMoved.myPos, req);
-        res.ok();
+        Position.findOne().where({'charPos': charWhoMoved.id}).exec(function (position, err) {
+          if (err) {
+            res.serverError(err);
+          }
+          console.log(position);
+          if (position === undefined || position === null) {
+            charWhoMoved.myPos = {x :player.x, y: player.y, Zone: player.Zone, charPos: charWhoMoved.id};
+            charWhoMoved.save();
+          } else {
+            position.x = player.x;
+            position.y = player.y;
+            position.Zone = player.Zone;
+            position.save(console.log('New position saved'));
+          }
+          //Tell the other one player move exept the current player
+          sails.sockets.broadcast(req.param('gameGuid'), 'Games:playerMove', charWhoMoved, req);
+          res.ok();
+        })
       });
     }
   }
