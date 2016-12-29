@@ -34,14 +34,6 @@ module.exports = {
 
     }
   },
-  sendExistedPlayers: function (req, res) {
-    console.log('Send Exist player');
-    console.log(req.param('playerTosend'));
-    console.log(req.param('existedPlayers'));
-    //send to the new player the current players
-    sails.sockets.broadcast(req.param('playerTosend'), 'Games:addExistPlayerTotheGame', req.param('existedPlayers'));
-    res.ok();
-  },
   joinGame: function (req, res) {
       if (req.isSocket) {
           Game.find({guid: req.param('gameGuid')})
@@ -192,6 +184,20 @@ module.exports = {
           currentPlayer = user.email;
           return res.json({'playerTurn': currentPlayer === playerTurnEmail})
         })
+      });
+    }
+  },
+  endPlayerTurn: function (req, res) {
+    if (req.isSocket) {
+      var currentPlayer,
+          nextPlayer,
+          tempPlayerList;
+      currentGameService.getCurrentGame(req.session.me, function callback(game) {
+        tempPlayerList = -.reject(game.listPlayers, function (player) {
+          return player.id !== req.session.me;
+        });
+        game.turnof = tempPlayerList[0].email;
+        game.save(console.log('Game save'););
       });
     }
   },

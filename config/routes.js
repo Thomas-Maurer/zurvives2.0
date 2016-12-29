@@ -59,7 +59,8 @@ module.exports.routes = {
   'POST /games/player/move': 'GameController.movePlayer',
   'GET /games/zone/loot': 'GameController.getLootFromLootTable',
   'GET /games/getCurrentGame': 'GameController.getCurrentGame',
-  'POST /games/sendExistedPlayers' : 'GameController.sendExistedPlayers'
+  'POST /games/sendExistedPlayers' : 'GameController.sendExistedPlayers',
+  'POST /games/endPlayerTurn' : 'GameController.endPlayerTurn'
 
 
   /***************************************************************************
