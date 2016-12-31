@@ -88,7 +88,7 @@ Weapon.create({item: 2, damage: 2, range: 2, reload: false, oneHand: true}).exec
 Item.create({name: 'nothing', description: 'nothing usefull', quality: 0, price: 0, weapon: null, weight: 80}).exec(console.log);
 Item.create({name: null, description: null, quality: 0, price: 0, weapon: null, weight: 90}).exec(console.log);
 
-
+// *---------- Create LootTable -----------*
 LootTable.create({name: 'Zombies'}).exec(function(err, lootTable) {
   lootTable.items.add([1,2]);
   lootTable.save();

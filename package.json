@@ -25,7 +25,8 @@
     "sails": "^0.12.3",
     "sails-disk": "~0.10.9",
     "sails-hook-validation": "^0.4.5",
-    "sails-mysql": "^0.12.1"
+    "sails-mysql": "^0.12.1",
+    "minimatch": "^3.0.2"
   },
   "scripts": {
     "debug": "node debug app.js",

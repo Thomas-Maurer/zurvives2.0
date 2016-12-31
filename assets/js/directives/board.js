@@ -203,8 +203,8 @@ zurvives.directive('board', function($http, boardData) {
         //moveTo(player, 34, 0);
         player.Zone = zone;
         var currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
-        player.x = x;
-        player.y = y;
+        player.x = x*$scope.tileSize + $scope.tileSize/2;
+        player.y = y*$scope.tileSize + $scope.tileSize/2
         player.name = email;
 
         currentZone.noise++;
@@ -249,20 +249,20 @@ zurvives.directive('board', function($http, boardData) {
       };
 
       $scope.moveTo = function moveTo(object, x, y) {
-        object.x= x*$scope.tileSize + $scope.tileSize/2;
-        object.y =y*$scope.tileSize + $scope.tileSize/2;
+        object.x = x*$scope.tileSize + $scope.tileSize/2;
+        object.y = y*$scope.tileSize + $scope.tileSize/2;
         stage.update();
         $scope.alreadyMove = true;
       };
 
       $scope.moveToZ = function moveToZ(object, x, y, zone) {
-        object.x= x*$scope.tileSize + $scope.tileSize/2;
-        object.y =y*$scope.tileSize + $scope.tileSize/2;
+        object.x = x*$scope.tileSize + $scope.tileSize/2;
+        object.y = y*$scope.tileSize + $scope.tileSize/2;
         stage.update();
       };
       $scope.moveToBroadcast = function (object, x, y, zone) {
-        object.x = x;
-        object.y = y;
+        object.x = x*$scope.tileSize + $scope.tileSize/2;
+        object.y = y*$scope.tileSize + $scope.tileSize/2;
         object.Zone = zone;
         stage.update();
       };

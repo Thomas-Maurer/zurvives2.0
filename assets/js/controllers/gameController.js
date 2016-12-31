@@ -160,14 +160,15 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
 
               currentZone = _.findWhere($scope.zones, {Zone: player.Zone.toString()});
               currentZone.noise++;
+              //Move the player to the next location
               $scope.moveTo(player, (e.currentTarget.x/$scope.tileSize), (e.currentTarget.y/$scope.tileSize));
-
-              var data = {player: {id: $scope.user.id, name: player.name, x: player.x, y: player.y, Zone: player.Zone}, gameGuid: $scope.currentGame.guid};
-
-              //Tell the server the player moove
+              console.log("Move to : " + (e.currentTarget.x/$scope.tileSize), (e.currentTarget.y/$scope.tileSize));
+              var data = {player: {id: $scope.user.id, name: player.name, x: (e.currentTarget.x/$scope.tileSize), y: (e.currentTarget.y/$scope.tileSize), Zone: player.Zone}, gameGuid: $scope.currentGame.guid};
+              console.log(data);
+              //Tell the server the player move
               io.socket.post('/games/player/move', data, function (res) {
-                //Tell himself he mooves
-                toastr['info']("You have moove");
+                //Tell himself he moves
+                toastr['info']("You have move");
               });
 
             } else {
