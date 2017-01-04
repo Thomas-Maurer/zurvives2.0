@@ -130,7 +130,12 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       $scope.initPlayer($scope.color, $scope.user.email);
       _.each(listPlayersWithoutCurrentOne, function (player) {
         $scope.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
-        $scope.initPlayerToMap($scope.color, player.email, player.char.myPos.x, player.char.myPos.y, player.char.myPos.Zone);
+        //If the char doesn't have any pos just init him
+        if (player.char.myPos !== null && player.char.myPos !== undefined) {
+          $scope.addPlayerToMap($scope.color, player.email, player.char.myPos.x, player.char.myPos.y, player.char.myPos.Zone);
+        }else{
+          $scope.initPlayer($scope.color, player.email);
+        }
       });
       $scope.mapfullyload = true;
       $scope.$apply();

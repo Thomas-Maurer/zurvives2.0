@@ -187,6 +187,8 @@ module.exports = {
       });
     }
   },
+  //End the player turn
+  //TODO Maybe tell the next player it's his turn ?
   endPlayerTurn: function (req, res) {
     if (req.isSocket) {
       var currentPlayer,

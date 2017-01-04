@@ -197,7 +197,7 @@ zurvives.directive('board', function($http, boardData) {
         stage.update();
       };
 
-      $scope.initPlayerToMap = function (color, email, x, y, zone) {
+      $scope.addPlayerToMap = function (color, email, x, y, zone) {
         player = new createjs.Shape();
         player.graphics.beginFill(color).drawCircle(0,0,10);
         //moveTo(player, 34, 0);
