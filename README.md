@@ -10,6 +10,10 @@ This uses:
 * [Npm](https://www.npmjs.com/)
 * [Bower](https://bower.io/)
 
+## Informations
+
+You can find [here](https://trello.com/b/saO73dvA/zurvives-2-0) the current state of the development.
+
 ## Get started
 
 You need to clone the repo, then go to the project folder then run :
