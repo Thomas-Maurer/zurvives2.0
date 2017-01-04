@@ -25,6 +25,7 @@ After go to repo/assets :
 `
 bower update
 `
+Before you lift the application you need to set up the database, to do that you will modify the file : `connection.js` in `repo/config`
 
 To run the application just do:
 `
