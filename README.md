@@ -6,7 +6,7 @@ This application is under development.
 
 This uses:
 
-* [Sails](http://sailsjs.org) application
+* [Sails/Node](http://sailsjs.org) application
 * [Npm](https://www.npmjs.com/)
 * [Bower](https://bower.io/)
 
