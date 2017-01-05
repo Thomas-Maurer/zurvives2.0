@@ -216,6 +216,15 @@ zurvives.directive('board', function($http, boardData) {
         stage.update();
       };
 
+      $scope.removePlayerToMap = function(player) {
+        stage.removeChild(player);
+        $scope.listplayer = _.reject($scope.listplayer, {email: player.name});
+        //delete the user from the client data
+        $scope.players = _.reject($scope.players, {email: player.name});
+
+        stage.update();
+      };
+
       $scope.getSpawnZombies = function () {
         return $scope.zoneZombies;
       };

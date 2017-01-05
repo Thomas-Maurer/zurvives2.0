@@ -2,6 +2,10 @@ exports.getCurrentGame = function (idUser, callback) {
   User.findOne({id: idUser})
       .populate('currentGame')
       .exec(function (err, user) {
+        //If the user isn't connected to any game just send an empty array
+        if (user.currentGame === null || user.currentGame === undefined) {
+          return callback(false);
+        }
         Game.find(user.currentGame.id)
             .populate('listPlayers')
             .populate('listChar')

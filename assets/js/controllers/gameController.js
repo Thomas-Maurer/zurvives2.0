@@ -118,7 +118,8 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       Player = Player.user;
       if(_.findIndex($scope.players, {email: Player.email}) !== -1) {
         toastr["info"]("Player : " + Player.email + " has leave the game");
-        $scope.players = _.reject($scope.players, {id: Player.id});
+        //delete the user from the canvas
+        $scope.removePlayerToMap(_.where($scope.listplayer, {name: Player.email})[0]);
       }
     });
 

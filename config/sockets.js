@@ -122,10 +122,48 @@ module.exports.sockets = {
   * disconnects                                                              *
   *                                                                          *
   ***************************************************************************/
-  // afterDisconnect: function(session, socket, cb) {
-  //   // By default: do nothing.
-  //   return cb();
-  // },
+   afterDisconnect: function(session, socket, cb) {
+     // By default: do nothing.
+     if (session !== undefined && session !== null) {
+       if (session.me === null || session.me === undefined) {
+         return cb();
+       } else {
+         currentGameService.getCurrentGame(session.me, function (game) {
+         //If the game doesn't exist just run the callback
+         if (game === false) {
+           return cb();
+         } else {
+           userDisconnected = _.where(game.listPlayers,{id: session.me})[0];
+           game.listPlayers = _.reject(game.listPlayers, function (player) {
+             return player.id === session.me;
+           });
+           if (game.listPlayers.length === 0) {
+             Game.destroy(game.id).exec(function (err) {
+               console.log('Game Destroy');
+               //log the error
+               //TODO Create Log Class
+               if (err) {
+                 res.serverError(err);
+               }
+             });
+           } else {
+             //delete new player and char to the gameInfo
+             game.listPlayers.remove(session.me);
+             game.listChar.remove(_.where(game.listChar,{user: session.me})[0].id);
+             game.save();
+           }
+           //send to all clients that a game has been created/Updated
+           sails.sockets.blast('gameUpdated');
+           //unsuscribe the user to the gameRoom
+           sails.sockets.leave(socket.id, game.guid);
+           //tell the others of the room a player left them
+           sails.sockets.broadcast(game.guid, 'Games:playerLeave', {user: userDisconnected});
+         }
+       });
+        }
+     }
+     return cb();
+   },
 
   /***************************************************************************
   *                                                                          *

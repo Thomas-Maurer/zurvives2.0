@@ -117,9 +117,6 @@ module.exports = {
               return res.json(404, null);
             }
             delete me.password;
-            _.each(me.characters, function (char) {
-              console.log(char.myPos);
-            });
             sails.log('Found "%s"', me.email);
             return res.json(me);
           });

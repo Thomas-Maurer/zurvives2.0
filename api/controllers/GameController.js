@@ -154,7 +154,9 @@ module.exports = {
           Game.destroy(currentGame.id).exec(function (err) {
             //log the error
             //TODO Create Log Class
-            console.log(err);
+            if (err) {
+              res.serverError(err);
+            }
           });
         } else {
           //delete new player and char to the gameInfo
@@ -162,7 +164,7 @@ module.exports = {
           currentGame.listChar.remove(_.where(currentGame.listChar,{user: req.param('player').id})[0].id);
           currentGame.save();
         }
-        //send to all clients that a game has been created
+        //send to all clients that a game has been created/Updated
         sails.sockets.blast('gameUpdated');
         //unsuscribe the user to the gameRoom
         sails.sockets.leave(sails.sockets.getId(req), req.param('gameGuid'));
@@ -198,11 +200,11 @@ module.exports = {
         tempPlayerList = _.reject(game.listPlayers, function (player) {
           return player.id === req.session.me;
         });
-        if (tempPlayerList === undefined) {
+        //If the game only possess one player just set the tempPlayerList to the currentGame player list
+        if (tempPlayerList === undefined || tempPlayerList === null) {
           tempPlayerList = game.listPlayers;
         }
         game.turnof = tempPlayerList[0].email;
-        //console.log(game.turnof);
         game.save();
       });
     }
@@ -217,12 +219,12 @@ module.exports = {
         });
         //Update character pos serverSide
         Position.findOne().where({'charPos': charWhoMoved.id}).exec(function (err, position) {
-          console.log("ERROR : ");
-          console.log(err);
           if (err) {
+            console.log("ERROR : ");
+            console.log(err);
             res.serverError(err);
           } else {
-            console.log(position);
+            //if position doesn't exist then the charac just enter the game so we need to init his position
             if (position === undefined || position === null) {
               charWhoMoved.myPos = {x :player.x, y: player.y, Zone: player.Zone, charPos: charWhoMoved.id};
               charWhoMoved.save();
@@ -230,7 +232,6 @@ module.exports = {
               position.x = player.x;
               position.y = player.y;
               position.Zone = player.Zone;
-              console.log(position);
               position.save(console.log('New position saved'));
               charWhoMoved.myPos = {x :player.x, y: player.y, Zone: player.Zone, charPos: charWhoMoved.id};
             }
