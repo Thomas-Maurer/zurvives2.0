@@ -12,6 +12,8 @@ This uses:
 
 ## Informations
 
+You need to have a MYSQL server up and running with `root:root` and a database named `Zurvives`. 
+
 You can find [here](https://trello.com/b/saO73dvA/zurvives-2-0) the current state of the development.
 
 ## Get started
