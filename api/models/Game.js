@@ -33,6 +33,11 @@ module.exports = {
     turnof: {
       type: 'string',
       required: true
+    },
+    maxPlayers: {
+      type: 'integer',
+      required: true,
+      defaultsTo: 5
     }
 
   }

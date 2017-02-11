@@ -14,7 +14,8 @@ module.exports = {
         name: req.param('name'),
         listPlayers: req.param('listPlayers'),
         listChar: req.param('listChar'),
-        turnof: req.param('listPlayers')[0].email
+        turnof: req.param('listPlayers')[0].email,
+        maxPlayers: req.param('maxPlayers')
       }).exec(function (err, game) {
         if (err) {
           return res.negotiate(err);

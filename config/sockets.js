@@ -124,7 +124,7 @@ module.exports.sockets = {
   ***************************************************************************/
    afterDisconnect: function(session, socket, cb) {
      // By default: do nothing.
-     if (session !== undefined && session !== null) {
+     if (session !== undefined && session !== null && session !== {}) {
        if (session.me === null || session.me === undefined) {
          return cb();
        } else {

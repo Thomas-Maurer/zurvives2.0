@@ -73,13 +73,13 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
       size: 'lg',
       scope: $scope
     });
-    modalInstance.result.then(function (selectedChar) {
+    modalInstance.result.then(function (config) {
       //Do stuff after we close the modal
-      if (selectedChar !== null && selectedChar !== undefined) {
+      if (config.selectedChar !== null && config.selectedChar !== undefined) {
         //get the char the user choose
-        $scope.selectedChar = selectedChar;
+        $scope.selectedChar = config.selectedChar;
         var gameGuid = guid();
-        io.socket.post('/games/create',{guid: gameGuid, name: 'gameName', listChar: [$scope.selectedChar], listPlayers: [$scope.connectedUser]} ,function (resData, jwres){
+        io.socket.post('/games/create',{guid: gameGuid, name: 'gameName', maxPlayers: config.maxPlayers, listChar: [$scope.selectedChar], listPlayers: [$scope.connectedUser]} ,function (resData, jwres){
           //Connect the user to the game he creates
           $state.go('currentGame', {gameGuid: gameGuid});
         });
@@ -101,6 +101,7 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
 
   //Need to rework !
   $scope.joinGame = function (gameGuid) {
+    $scope.gameGuid = gameGuid;
     var modalInstance = $uibModal.open({
       animation: true,
       templateUrl: '/currentGame/gameConfig',
@@ -108,11 +109,11 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
       size: 'lg',
       scope: $scope
     });
-    modalInstance.result.then(function (selectedChar) {
+    modalInstance.result.then(function (config) {
       //Do stuff after we close the modal
-      if (selectedChar !== null) {
+      if (config.selectedChar !== null) {
         //get the char the user choose
-        $scope.selectedChar = selectedChar;
+        $scope.selectedChar = config.selectedChar;
         io.socket.post('/games/joinGame/', {gameGuid: gameGuid, charSelected: $scope.selectedChar, newPlayer: $scope.connectedUser},function (resData, jwres){
           $state.go('currentGame', {gameGuid: gameGuid});
         });
@@ -159,9 +160,14 @@ zurvives.controller('ModalSelectChar', ['$scope', '$uibModalInstance', function 
 
   $scope.listChars = $scope.$parent.myCharactersList;
   $scope.selectedChar = null;
+  $scope.configGame = {};
+  $scope.maxPlayers = 5;
+
 
   $scope.ok = function () {
-    $uibModalInstance.close($scope.listChars[$scope.selectedChar]);
+    $scope.configGame.selectedChar = $scope.listChars[$scope.selectedChar];
+    $scope.configGame.maxPlayers = $scope.maxPlayers;
+    $uibModalInstance.close($scope.configGame);
   };
 
   $scope.cancel = function () {

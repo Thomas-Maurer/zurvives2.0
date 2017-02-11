@@ -27,8 +27,8 @@ zurvives.config(function($routeProvider, $locationProvider, $stateProvider) {
           templateUrl: '/templates/currentGame/currentGame.ejs',
           controller: 'gameController',
           onExit: removeAll
-
-        });
+        })
+        ;
 
         var removeAll = function () {
           io.socket.removeAllListeners();

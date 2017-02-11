@@ -32,9 +32,7 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'homepage'
-  },
+
   '/topUsers': {
     view: 'topUsers'
   },
@@ -44,7 +42,18 @@ module.exports.routes = {
     controller: "UserController",
     action: "me"
   },
-  'GET /currentGame/gameConfig': {view: 'currentGame/gameConfig', locals: {layout: 'currentGame/gameConfig'}},
+
+  /* MODALS URL */
+  'GET /currentGame/gameConfig': {
+    view: 'modals/gameConfig',
+    locals:
+      {
+        layout: 'modals/gameConfig'
+      }
+    },
+
+    /* END MODALS URL */
+
   'GET /signup': {view: 'signup', locals: {layout: 'signup'}},
   'PUT /login': 'UserController.login',
   'POST /signup': 'UserController.signup',

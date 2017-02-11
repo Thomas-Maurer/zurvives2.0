@@ -104,7 +104,6 @@ module.exports = {
   },
   me: function(req, res) {
     if (!req.isSocket) {
-      sails.log(req.session.me);
       if (req.session.me !== undefined) {
         User.findOne({id: req.session.me})
           .populate('characters')
