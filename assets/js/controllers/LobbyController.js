@@ -79,7 +79,7 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
         //get the char the user choose
         $scope.selectedChar = config.selectedChar;
         var gameGuid = guid();
-        io.socket.post('/games/create',{guid: gameGuid, name: 'gameName', maxPlayers: config.maxPlayers, listChar: [$scope.selectedChar], listPlayers: [$scope.connectedUser]} ,function (resData, jwres){
+        io.socket.post('/games/create',{guid: gameGuid, name: config.gameName, maxPlayers: config.maxPlayers, listChar: [$scope.selectedChar], listPlayers: [$scope.connectedUser]} ,function (resData, jwres){
           //Connect the user to the game he creates
           $state.go('currentGame', {gameGuid: gameGuid});
         });
@@ -162,11 +162,13 @@ zurvives.controller('ModalSelectChar', ['$scope', '$uibModalInstance', function 
   $scope.selectedChar = null;
   $scope.configGame = {};
   $scope.maxPlayers = 5;
+  $scope.gameName = 'gameName';
 
 
   $scope.ok = function () {
     $scope.configGame.selectedChar = $scope.listChars[$scope.selectedChar];
     $scope.configGame.maxPlayers = $scope.maxPlayers;
+    $scope.configGame.gameName = $scope.gameName;
     $uibModalInstance.close($scope.configGame);
   };
 

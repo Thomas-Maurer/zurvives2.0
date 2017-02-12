@@ -1,9 +1,15 @@
 <div>
-  <label for="listChars"> Single select: </label><br>
+
+  <label for="listChars"> Select your char: </label><br>
   <select name="listChars" ng-model="selectedChar">
     <option ng-repeat="option in listChars track by $index" value="{{$index}}">{{option.name}}</option>
   </select>
+
+  <label ng-if="gameGuid === undefined" for="maxPlayers">Max number of players: </label>
   <input min="0" max="10" ng-if="gameGuid === undefined" type="number" name="maxPlayers" ng-model="maxPlayers">
+
+  <label ng-if="gameGuid === undefined" for="gameName"> Game name: </label>
+  <input ng-if="gameGuid === undefined" type="text" name="gameName" ng-model="gameName">
 
   <button ng-click="ok()">Create</button>
 </div>
