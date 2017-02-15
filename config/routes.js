@@ -54,6 +54,13 @@ module.exports.routes = {
 
     /* END MODALS URL */
 
+
+    /* API CALL */
+
+    'GET /api/dice/roll' : 'DiceController.roll',
+
+    /* END API CALL */
+
   'GET /signup': {view: 'signup', locals: {layout: 'signup'}},
   'PUT /login': 'UserController.login',
   'POST /signup': 'UserController.signup',
