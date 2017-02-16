@@ -4,7 +4,7 @@ exports.getCurrentGame = function (idUser, callback) {
       .exec(function (err, user) {
         //If the user isn't connected to any game just send an empty array
         if (user.currentGame === null || user.currentGame === undefined) {
-          return callback(false);
+          return callback([]);
         }
         Game.find(user.currentGame.id)
             .populate('listPlayers')
@@ -18,9 +18,6 @@ exports.getCurrentGame = function (idUser, callback) {
               _.each(game[0].listChar, function (character, index) {
                 Character.findOne(character.id).populate('myPos')
                 .exec(function (err, char) {
-                  //console.log('***********************');
-                  //console.log(char, index);
-                  //console.log('***********************');
                   game[0].listChar[index] = char;
                   cpt++;
                   if (cpt === game[0].listChar.length) {

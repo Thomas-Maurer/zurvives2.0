@@ -54,7 +54,7 @@ module.exports = {
         req.session.me = null;
 
         // Either send a 200 OK or redirect to the home page
-        return res.ok();
+        return res.redirect('/');
 
       });
     }else {
@@ -104,7 +104,7 @@ module.exports = {
   },
   me: function(req, res) {
     if (!req.isSocket) {
-      if (req.session.me !== undefined) {
+      if (req.session.me !== undefined || req.session.me !== null) {
         User.findOne({id: req.session.me})
           .populate('characters')
           .populate('currentGame')

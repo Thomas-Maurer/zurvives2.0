@@ -26,7 +26,7 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  // '*': true,
+  '*': 'sessionAuth',
 
   /***************************************************************************
   *                                                                          *
@@ -34,6 +34,18 @@ module.exports.policies = {
   * and its actions                                                          *
   *                                                                          *
   ***************************************************************************/
+
+
+  GameController: {
+    '*' : 'sessionAuth'
+  },
+
+  UserController: {
+    '*' : true,
+    'dashboard' : 'sessionAuth',
+    'logout' : 'sessionAuth'
+  }
+
 	// RabbitController: {
 
 		// Apply the `false` policy as the default for all of RabbitController's actions

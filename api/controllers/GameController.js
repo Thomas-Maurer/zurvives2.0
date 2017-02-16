@@ -114,9 +114,6 @@ module.exports = {
   },
   getCurrentGame: function (req,res) {
     currentGameService.getCurrentGame(req.session.me, function callback(game) {
-    //  console.log('////////////////////');
-      //console.log(game);
-    //  console.log('////////////////////');
       return res.json(game);
     });
   },

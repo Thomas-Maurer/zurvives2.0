@@ -77,11 +77,9 @@ zurvives.controller('AuthenticationController', function($window ,$scope, $http,
     // Submit request to Sails.
     $http.get('/logout')
       .then(function onSuccess (){
-        // Refresh the page now that we've been logged out.
         $scope.logged = false;
         // Refresh the page now that we've been logged out.
         io.socket.get('/logout', function (resData, jwres){
-          console.log(resData);
         });
       })
       .catch(function onError(sailsResponse) {
