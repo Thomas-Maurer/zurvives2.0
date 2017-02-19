@@ -47,6 +47,11 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
 
     //Send informations from the current game to the client
     $scope.getCurrentGameInfo().then(function (currentGame){
+      console.log(currentGame);
+      //No game found redirect to the Home
+      if (currentGame.statusText === "Not Found") {
+        $state.go('home');
+      }
       userServices.then(function (currentUser){
         $scope.user = currentUser.data;
       });

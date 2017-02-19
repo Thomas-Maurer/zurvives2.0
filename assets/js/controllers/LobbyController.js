@@ -74,6 +74,7 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
       scope: $scope
     });
     modalInstance.result.then(function (config) {
+      console.log(config);
       //Do stuff after we close the modal
       if (config.selectedChar !== null && config.selectedChar !== undefined) {
         //get the char the user choose
@@ -161,14 +162,12 @@ zurvives.controller('ModalSelectChar', ['$scope', '$uibModalInstance', function 
   $scope.listChars = $scope.$parent.myCharactersList;
   $scope.selectedChar = null;
   $scope.configGame = {};
-  $scope.maxPlayers = 5;
-  $scope.gameName = 'gameName';
+  $scope.configGame.maxPlayers = 5;
+  $scope.configGame.gameName = 'gameName';
 
 
   $scope.ok = function () {
     $scope.configGame.selectedChar = $scope.listChars[$scope.selectedChar];
-    $scope.configGame.maxPlayers = $scope.maxPlayers;
-    $scope.configGame.gameName = $scope.gameName;
     $uibModalInstance.close($scope.configGame);
   };
 

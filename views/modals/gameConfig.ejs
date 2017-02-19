@@ -6,10 +6,11 @@
   </select>
 
   <label ng-if="gameGuid === undefined" for="maxPlayers">Max number of players: </label>
-  <input min="0" max="10" ng-if="gameGuid === undefined" type="number" name="maxPlayers" ng-model="maxPlayers">
+  <input min="1" max="10" ng-if="gameGuid === undefined" type="number" name="maxPlayers" ng-model="configGame.maxPlayers">
 
   <label ng-if="gameGuid === undefined" for="gameName"> Game name: </label>
-  <input ng-if="gameGuid === undefined" type="text" name="gameName" ng-model="gameName">
+  <input ng-if="gameGuid === undefined" type="text" name="gameName" ng-model="configGame.gameName">
 
-  <button ng-click="ok()">Create</button>
+  <button ng-if="gameGuid === undefined" ng-click="ok()">Join</button>
+  <button ng-if="gameGuid !== undefined" ng-click="ok()">Create</button>
 </div>

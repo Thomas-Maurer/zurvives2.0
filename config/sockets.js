@@ -130,7 +130,7 @@ module.exports.sockets = {
        } else {
          currentGameService.getCurrentGame(session.me, function (game) {
          //If the game doesn't exist just run the callback
-         if (game === false) {
+         if (game === false || game.length === 0 ) {
            return cb();
          } else {
            userDisconnected = _.where(game.listPlayers,{id: session.me})[0];
