@@ -15,7 +15,8 @@ module.exports = {
         listPlayers: req.param('listPlayers'),
         listChar: req.param('listChar'),
         turnof: req.param('listPlayers')[0].email,
-        maxPlayers: req.param('maxPlayers')
+        maxPlayers: req.param('maxPlayers'),
+        password: req.param('password')
       }).exec(function (err, game) {
         if (err) {
           return res.negotiate(err);
@@ -127,6 +128,12 @@ module.exports = {
             _.each(game.listPlayers, function(player){
               delete player.password;
             });
+            if (game.password !== null) {
+              game.hasPassword = true;
+            } else {
+              game.hasPassword = false;
+            }
+            delete game.password;
           });
           return res.json(games);
       });

@@ -2,7 +2,7 @@
   <button ng-click="openModalChooseChar()">Create Game</button>
   <ul>
     <li ng-repeat="game in listCurrentGames">
-      <p>{{game.name}} {{game.listPlayers.length}} / {{game.maxPlayers}} </p>
+      <p>{{game.name}} {{game.listPlayers.length}} / {{game.maxPlayers}} <span ng-show="game.hasPassword === true" class="glyphicon glyphicon-lock"> </span></p>
       <button ng-click='joinGame(game.guid)'>Join Game</button>
     </li>
   </ul>

@@ -257,6 +257,7 @@ zurvives.directive('board', function($http, boardData) {
         stage.update();
       };
 
+      // Movements
       $scope.moveTo = function moveTo(object, x, y) {
         object.x = x*$scope.tileSize + $scope.tileSize/2;
         object.y = y*$scope.tileSize + $scope.tileSize/2;
@@ -279,10 +280,6 @@ zurvives.directive('board', function($http, boardData) {
       $scope.getZones = function () {
         return $scope.zones;
       };
-
-      // Movements
-
-
       // End Movements
 
       $scope.findPath = function(zombieZone,loudestZone) {

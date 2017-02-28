@@ -38,6 +38,10 @@ module.exports = {
       type: 'integer',
       required: true,
       defaultsTo: 5
+    },
+    password: {
+      type: 'string',
+      defaultsTo: null
     }
 
   }
