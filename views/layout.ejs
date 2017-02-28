@@ -65,14 +65,11 @@
           <button ui-sref='userDashboard' type="submit" class="navbar-right btn btn-success">
             <span>DashBoard</span>
           </button>
-          <form ng-submit="submitLogoutForm()" class="navbar-form navbar-right">
-            <button type="submit" class="btn btn-success">
+            <button type="submitLogoutForm()" class="navbar-right btn btn-success">
               <span ng-show="!logoutForm.loading">Logout</span>
               <span ng-show="logoutForm.loading" class="fa fa-spinner"></span>
               <span ng-show="logoutForm.loading">Logout...</span>
             </button>
-            <input type="hidden" name="_csrf" value="<%= _csrf %>" />
-          </form>
         </div>
       </div>
     </div>

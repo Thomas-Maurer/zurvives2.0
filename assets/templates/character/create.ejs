@@ -10,7 +10,7 @@
         <input ng-model="characterInfo.name" type="text" id="name" name="char_name">
 
         <label for="Biography">Biography:</label>
-        <input ng-model="characterInfo.biography" type="text" id="Biography" name="char_biography">
+        <input ng-model="characterInfo.biography" type="textarea" id="Biography" name="char_biography">
 
         <label for="Stats">Stats: Nb points left -> {{characterInfo.nbPointsStats}}</label>
         <label for="Life">Life: {{characterInfo.life}}</label>
@@ -24,6 +24,4 @@
       <button type="submit">Create</button>
     </form>
   </div>
-  <%- partial ('listCharUser.ejs') %>
 </div>
-

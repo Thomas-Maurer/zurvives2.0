@@ -17,6 +17,11 @@ zurvives.config(function($routeProvider, $locationProvider, $stateProvider) {
           templateUrl: '/templates/user/dashboard.ejs',
           onExit: removeAll
         })
+        .state('userCharacterCreate', {
+          url: '/user/character/create',
+          templateUrl: '/templates/character/create.ejs',
+          onExit: removeAll
+        })
         .state('gamesList', {
           url: '/games/lobby',
           templateUrl: '/templates/currentGame/listGames.ejs',

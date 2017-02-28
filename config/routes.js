@@ -37,11 +37,6 @@ module.exports.routes = {
     view: 'topUsers'
   },
   'POST /character': {},
-  'GET /user/character/create':{
-    view: 'character/create',
-    controller: "UserController",
-    action: "me"
-  },
 
   /* MODALS URL */
   'GET /currentGame/gameConfig': {
