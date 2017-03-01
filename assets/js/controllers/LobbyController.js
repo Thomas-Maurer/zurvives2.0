@@ -124,8 +124,20 @@ zurvives.controller('LobbyController', function($scope, $http, toastr, $q, $wind
       if (config.selectedChar !== null) {
         //get the char the user choose
         $scope.selectedChar = config.selectedChar;
-        io.socket.post('/games/joinGame/', {gameGuid: gameGuid, charSelected: $scope.selectedChar, newPlayer: $scope.connectedUser},function (resData, jwres){
-          $state.go('currentGame', {gameGuid: gameGuid});
+        io.socket.post('/games/joinGame/',
+         {
+           gameGuid: gameGuid,
+           charSelected: $scope.selectedChar,
+           newPlayer: $scope.connectedUser,
+           password: config.password
+          },function (resData, jwres){
+            if (jwres.statusCode === 403) {
+              toastr.error('Invalid password', 'Error', {
+                closeButton: true
+              });
+            } else {
+              $state.go('currentGame', {gameGuid: gameGuid});
+            }
         });
       }
 

@@ -11,8 +11,8 @@
   <label ng-if="gameGuid === undefined" for="gameName"> Game name: </label>
   <input ng-if="gameGuid === undefined" type="text" name="gameName" ng-model="configGame.gameName">
 
-  <label ng-if="gameGuid === undefined" for="password"> Game password: </label>
-  <input ng-if="gameGuid === undefined" type="password" name="password" ng-model="configGame.password">
+  <label for="password"> Game password: </label>
+  <input type="password" name="password" ng-model="configGame.password">
 
   <button ng-if="gameGuid !== undefined" ng-click="ok()">Join</button>
   <button ng-if="gameGuid === undefined" ng-click="ok()">Create</button>

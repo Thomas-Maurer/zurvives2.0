@@ -42,6 +42,12 @@ module.exports = {
           .populate('listPlayers')
           .populate('listChar')
           .exec(function (err, game) {
+            console.log('password send by the player ' + req.param('password'));
+            //if the password the player send is not valid then throw error
+            if (req.param('password') !== game.password) {
+              return res.forbidden();
+            }
+
             game = game[0];
             delete req.param('newPlayer').characters;
             //add new player and char to the gameInfo

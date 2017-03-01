@@ -134,6 +134,7 @@ module.exports.sockets = {
            return cb();
          } else {
            userDisconnected = _.where(game.listPlayers,{id: session.me})[0];
+           console.log(game.listPlayers);
            game.listPlayers = _.reject(game.listPlayers, function (player) {
              return player.id === session.me;
            });
