@@ -51,7 +51,8 @@ module.exports.routes = {
 
 
     /* API CALL */
-
+    'GET /api/map/create' : 'MapController.create',
+    'POST /api/map/getLayers' : 'MapController.getLayers',
     'GET /api/dice/roll' : 'DiceController.roll',
 
     /* END API CALL */

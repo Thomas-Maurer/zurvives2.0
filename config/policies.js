@@ -40,6 +40,10 @@ module.exports.policies = {
     '*' : 'sessionAuth'
   },
 
+  MapController: {
+    '*' : true
+  },
+
   UserController: {
     '*' : true,
     'dashboard' : 'sessionAuth',
