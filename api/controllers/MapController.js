@@ -6,41 +6,46 @@
  */
 var fs = require('fs'),
 		path = require('path'),
+		bfj = require('bfj'),
 		jf = require('jsonfile');
 module.exports = {
 	create: function (req, res) {
-		fs.readFile('./assets/data/board.json', 'utf8', function (err, data) {
-			currentMap = JSON.parse(data);
-			tempMapData = currentMap;
-			boardWidth = currentMap.width;
-			currentLayer2d = [];
-			layer2d = {};
-			tempMapData.layers = [];
-			//console.log(JSON.parse(JSON.parse(JSON.stringify(fs.readFileSync('./assets/data/board.json', 'utf8')))));
-			//console.log(JSON.parse(data).layers);
-			_.each(JSON.parse(data).layers, function (layer) {
-				//console.log(layer);
+		var layer2d = {},
+				currentLayer2d = [],
+				tempMapData = {},
+				boardWidth = 0;
+
+		bfj.parse(fs.createReadStream('./assets/data/board.json'))
+	  .then(data => {
+			tempMapData = data;
+			boardWidth = tempMapData.width;
+
+			_.each(data.layers, function (layer) {
 				tempMapData.layers[layer.name] = layer.data;
 			});
 
-			console.log(tempMapData.layers);
-			/*
-			tempMapData.layers.forEach(function (name, tile) {
+			_.each(tempMapData.layers, function (name, tile) {
+				console.log(name);
+				console.log(tile);
 				var currentLine = [];
-				for (var i = 0; i <= tile.length; i++) {
+				for (var i = 0; i <= layer.tile.length; i++) {
 					if( i%boardWidth === 0 && i !== 0) {
 						currentLayer2d.push(currentLine);
 						currentLine = [];
 					}
-					currentLine.push(tile[i]);
+					currentLine.push(layer.tile[i]);
 				};
 				layer2d[name] = currentLayer2d;
 				currentLayer2d = [];
 			})
-*/
 
-			res.json({map: tempMapData, layer2d: layer2d});
-		});
+			res.json({map: data, layer2d: layer2d});
+	  })
+	  .catch(error => {
+			console.log('error');
+			console.log(error);
+			res.json(error);
+	  });
 	},
 
 	getLayers: function (req, res) {
