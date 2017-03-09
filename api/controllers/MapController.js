@@ -6,8 +6,7 @@
  */
 var fs = require('fs'),
 		path = require('path'),
-		bfj = require('bfj'),
-		jf = require('jsonfile');
+		bfj = require('bfj');
 module.exports = {
 	create: function (req, res) {
 		var layer2d = {},
