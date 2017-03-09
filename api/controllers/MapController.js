@@ -13,32 +13,31 @@ module.exports = {
 				currentLayer2d = [],
 				tempMapData = {},
 				boardWidth = 0;
+				tempLayers = [];
 
 		bfj.parse(fs.createReadStream('./assets/data/board.json'))
 	  .then(data => {
 			tempMapData = data;
 			boardWidth = tempMapData.width;
 
-			_.each(data.layers, function (layer) {
-				tempMapData.layers[layer.name] = layer.data;
+			_.each(tempMapData.layers, function (layer) {
+				tempLayers.push({'name': layer.name, 'tiles': layer.data});
 			});
 
-			_.each(tempMapData.layers, function (name, tile) {
-				console.log(name);
-				console.log(tile);
+			tempLayers.forEach(function (layer) {
 				var currentLine = [];
-				for (var i = 0; i <= layer.tile.length; i++) {
+				for (var i = 0; i <= layer.tiles.length; i++) {
 					if( i%boardWidth === 0 && i !== 0) {
 						currentLayer2d.push(currentLine);
 						currentLine = [];
 					}
-					currentLine.push(layer.tile[i]);
+					currentLine.push(layer.tiles[i]);
 				};
-				layer2d[name] = currentLayer2d;
+				layer2d[layer.name] = currentLayer2d;
 				currentLayer2d = [];
-			})
-
-			res.json({map: data, layer2d: layer2d});
+			});
+			console.log('sendJson');
+			res.json({map: tempMapData, layer2d: layer2d});
 	  })
 	  .catch(error => {
 			console.log('error');

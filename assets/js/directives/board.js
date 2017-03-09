@@ -27,10 +27,10 @@ zurvives.directive('board', function($http, boardData) {
       var zonesContainer = new createjs.Container();
       zonesContainer.name = "zonesContainer";
       stage.enableMouseOver();
-      $scope.tileSize = result.tilewidth;       // The size of a tile (32×32)
-      $scope.rowTileCount = result.width;   // The number of tiles in a row of our background
-      $scope.colTileCount = result.height;   // The number of tiles in a column of our background
-      $scope.imageNumTiles = result.width;  // The number of tiles per row in the tileset image
+      $scope.tileSize = result.map.tilewidth;       // The size of a tile (32×32)
+      $scope.rowTileCount = result.map.width;   // The number of tiles in a row of our background
+      $scope.colTileCount = result.map.height;   // The number of tiles in a column of our background
+      $scope.imageNumTiles = result.map.width;  // The number of tiles per row in the tileset image
 
       var previousZoneForHovering;
 
@@ -63,7 +63,7 @@ zurvives.directive('board', function($http, boardData) {
 
       }
 
-      function initLayer(layerData, tilesetsheet, tileSize) {debugger;
+      function initLayer(layerData, tilesetsheet, tileSize) {
         for (var y = 0; y < $scope.rowTileCount; y++) {
           for (var x = 0; x < $scope.colTileCount; x++) {
             var cellBitmap = new createjs.Sprite(tilesetsheet);
