@@ -211,8 +211,9 @@ module.exports = {
         tempPlayerList = _.reject(game.listPlayers, function (player) {
           return player.id === req.session.me;
         });
+        console.log(tempPlayerList);
         //If the game only possess one player just set the tempPlayerList to the currentGame player list
-        if (tempPlayerList === undefined || tempPlayerList === null) {
+        if (tempPlayerList === undefined || tempPlayerList === null || tempPlayerList.length == 0) {
           tempPlayerList = game.listPlayers;
         }
         game.turnof = tempPlayerList[0].email;

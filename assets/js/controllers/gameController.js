@@ -54,6 +54,7 @@ zurvives.controller('gameController', function ($scope, $location, $http, $q, us
       }
       userServices.then(function (currentUser){
         $scope.user = currentUser.data;
+        $scope.currentChar = _.findWhere(currentGame.data.listChar, {user: $scope.user.id});
       });
       $scope.players = currentGame.data.listPlayers;
       $scope.currentGame = currentGame.data;
