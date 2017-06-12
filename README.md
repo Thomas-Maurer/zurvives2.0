@@ -9,6 +9,7 @@ This uses:
 * [Sails/Node](http://sailsjs.org) application
 * [Npm](https://www.npmjs.com/)
 * [Bower](https://bower.io/)
+* [createJS](http://www.createjs.com/)
 
 ## Informations
 
