@@ -1,0 +1,164 @@
+
+<!-- PANEL -->
+
+<div class="Panel">
+
+  <section class="Panel-section Panel-section--title">
+    <h1 class="Panel-title">Hero<wbr/>Quest <small class="Panel-tagline">Map creator</small></h1>
+    <ul class="Panel-basicInstructions">
+      <li>
+        <div class="MouseIcon MouseIcon--leftBtn"></div>
+        Left-click &amp; drag to draw.
+      </li>
+      <li>
+        <div class="MouseIcon MouseIcon--rightBtn"></div>
+        Right-click &amp; drag to delete.
+      </li>
+      <li>
+        <div class="KeyIcon KeyIcon--spacebar"></div>
+        Hold 'Space' &amp; drag to pan.
+      </li>
+      <li>
+        Ctrl &plusmn; to zoom ;)
+      </li>
+    </ul>
+  </section>
+
+  <section class="Panel-section  Panel-section--controls">
+    <div class="Panel-controls">
+      <div class="Panel-control-col">
+        <div class="Panel-btnGrp Panel-btnGrp--rotation">
+          <h2 class="Panel-btnGrpTitle">Rotation</h2>
+          <label class="btn btn-default btn-top" data-toggle="tooltip">
+            <input type="radio" name="rotation" id="radio-rotation270"/>270&deg;
+          </label>
+          <label class="btn btn-default btn-left" data-toggle="tooltip">
+            <input type="radio" name="rotation" id="radio-rotation180"/>180&deg;
+          </label>
+          <label class="btn btn-default btn-mid" data-toggle="tooltip">
+            <input type="radio" name="rotation" id="radio-rotationRand"/>Rand
+          </label>
+          <label class="btn btn-default btn-right" data-toggle="tooltip">
+            <input type="radio" name="rotation" id="radio-rotation0"/>0&deg;
+          </label>
+          <label class="btn btn-default btn-bottom" data-toggle="tooltip">
+            <input type="radio" name="rotation" id="radio-rotation90"/>90&deg;
+          </label>
+        </div>
+      </div>
+      <div class="Panel-control-col">
+        <div class="Panel-btnGrp Panel-btnGrp--mode">
+          <h2 class="Panel-btnGrpTitle">Paint mode</h2>
+          <label class="btn btn-default btn-top" data-toggle="tooltip">
+            <input type="radio" name="mode" id="radio-modeRand"/>Rand
+          </label>
+          <label class="btn btn-default btn-mid" data-toggle="tooltip">
+            <input type="radio" name="mode" id="radio-modeSingle"/>Single tile
+          </label>
+          <label class="btn btn-default btn-bottom" data-toggle="tooltip">
+            <input type="radio" name="mode" id="radio-modeWhole"/>Whole object
+          </label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="Panel-section  Panel-section--palette">
+    <ul class="Panel-paletteTabs nav nav-tabs" role="tablist">
+      <li><a id="tab-floors" role="tab" data-toggle="tooltip" title="Floor tiles"></a></li>
+      <li><a id="tab-walls" role="tab" data-toggle="tooltip" title="Walls"></a></li>
+      <li><a id="tab-triggers" role="tab" data-toggle="tooltip" title="Triggers"></a></li>
+      <li><a id="tab-furniture" role="tab" data-toggle="tooltip" title="Furniture"></a></li>
+      <li><a id="tab-creatures" role="tab" data-toggle="tooltip" title="Creatures"></a></li>
+    </ul>
+    <div class="Panel-paletteWrapper">
+      <div class="Panel-palette" id="palette-floors"></div>
+      <div class="Panel-palette" id="palette-walls"></div>
+      <div class="Panel-palette" id="palette-triggers"></div>
+      <div class="Panel-palette" id="palette-furniture"></div>
+      <div class="Panel-palette" id="palette-creatures"></div>
+    </div>
+  </section>
+
+  <section class="Panel-section  Panel-section--actions">
+    <div class="Panel-actions">
+      <a id="btn-clear" class="btn btn-primary" data-toggle="modal" data-target="#modal-clearAll">Clear</a>
+      <a id="btn-save" class="btn btn-primary" data-toggle="modal" data-target="#modal-save">Save</a>
+      <a id="btn-load" class="btn btn-primary" data-toggle="modal" data-target="#modal-load">Load</a>
+    </div>
+  </section>
+
+</div> <!-- /.Panel -->
+
+
+<!-- GRID -->
+
+<div class="Grid">
+  <div class="Grid-selector addMode"></div>
+  <div class="Tiles Tiles-creatures"></div>
+  <div class="Tiles Tiles-furniture"></div>
+  <div class="Tiles Tiles-triggers"></div>
+  <div class="Tiles Tiles-walls"></div>
+  <div class="Tiles Tiles-floors"></div>
+</div>
+
+
+
+<!-- MODALS -->
+
+<div class="modal fade" id="modal-clearAll">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Clear all tiles?</h4>
+        <p>This will erase all tiles on the current map.<br>All unsaved changes will be lost.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button id="modalBtn-clearAll" type="button" class="btn btn-primary" data-dismiss="modal">Clear All</button>
+      </div>
+    </div>
+  </div>
+</div><!-- /.modal -->
+
+<div class="modal fade" id="modal-save">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Save Map</h4>
+        <p>Saves to a <code>.json</code> map file for later use.</p>
+        <div class="form-group">
+          <label for="modalInput-fileName">File name</label>
+          <input type="text" class="form-control" id="modalInput-fileName" value="trial" placeholder="Enter file name">
+        </div>
+        <div class="form-group">
+          <label for="modalTextarea-save">Map data</label>
+          <textarea id="modalTextarea-save" class="form-control" rows="6" readonly>No map yet!</textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="modalBtn-save" type="button" class="btn btn-primary" data-dismiss="modal">Save to file</button>
+      </div>
+    </div>
+  </div>
+</div><!-- /.modal -->
+
+<div class="modal fade" id="modal-load">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Load map</h4>
+        <p>Select a <code>.json</code> map file to load map data from.<br><strong>Warning:</strong> this will clear the current map.</p>
+        <input type="file" id="modalInput-loadFile">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button id="modalBtn-load" type="button" class="btn btn-primary" data-dismiss="modal">Load</button>
+      </div>
+    </div>
+  </div>
+</div><!-- /.modal -->

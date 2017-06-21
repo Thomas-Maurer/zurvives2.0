@@ -1,0 +1,85 @@
+{
+
+  "campaignSettings": {
+    "gridSize": 70
+  },
+
+  "creatures": [
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/barbarian.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/dwarf.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/elf.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/wizard.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/goblin.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/orc.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/famir.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/skeleton.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/zombie.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/mummy.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/chaoswarrior.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/chaossorcerer.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/creatures/gargoyal.png" }
+  ],
+
+  "furniture": [
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/chest.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/throne.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/table.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/weaponrack.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/bookcase.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/cupboard.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/alchemistsbench.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/fireplace.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/rack.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/sorcererstable.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/tomb.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/furniture/rubble.png" }
+  ],
+
+  "triggers": [
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/triggers/trapspear.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/triggers/trappit.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/triggers/trapfallingblock.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/triggers/entry.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/triggers/exit.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/triggers/entryexit.png" }
+  ],
+
+  "walls": [
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/walls/stone.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/walls/doorclosed.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/walls/dooropen.png" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/walls/doorsecret.png" }
+  ],
+
+  "floors": [
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/corridor.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/spiralstair.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/greybrown.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/bluegrey.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/bluegreycheck.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/white.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/bluestones.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/bluediagonal.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/tealstones.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/tealcobbles.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/greencobbles.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/lightgreencobbles.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/green.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/lightgreen.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/yellow.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/yellowdiagonal.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/yellowgreencobbles.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/lightyellow.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/yellowstones.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/darkyellow.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/yellowgrid.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/yellowbrick.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/orangebrick.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/brownhatch.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/red.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/redcheckheavy.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/redcobbles.jpg" },
+    { "path": "http://www.davidelrizzo.com/heroquestonline/leveleditor/images/floors/redcheckflat.jpg" }
+    ]
+
+}

@@ -33,6 +33,12 @@ zurvives.config(function($routeProvider, $locationProvider, $stateProvider) {
           controller: 'gameController',
           onExit: removeAll
         })
+        .state('mapEditor', {
+          url: "/user/dashboard/mapEditor",
+          templateUrl: '/templates/user/mapEditor.ejs',
+          controller: 'mapEditorController',
+          onExit: removeAll
+        })
         ;
 
         var removeAll = function () {
