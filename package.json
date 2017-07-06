@@ -26,8 +26,11 @@
     "rc": "1.0.1",
     "sails": "^0.12.3",
     "sails-disk": "~0.10.9",
+    "sails-hook-grunt": "^2.0.0",
+    "sails-hook-orm": "^1.0.9",
+    "sails-hook-sockets": "^0.13.11",
     "sails-hook-validation": "^0.4.5",
-    "sails-mysql": "^0.12.2"
+    "sails-mysql": "^0.11.5"
   },
   "scripts": {
     "debug": "node debug app.js",
