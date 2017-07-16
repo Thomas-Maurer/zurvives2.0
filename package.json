@@ -24,7 +24,7 @@
     "lesshat": "^4.1.0",
     "minimatch": "^3.0.2",
     "rc": "1.0.1",
-    "sails": "^0.12.3",
+    "sails": "^0.12.13",
     "sails-disk": "~0.10.9",
     "sails-hook-validation": "^0.4.5",
     "sails-mysql": "^0.12.2"
@@ -38,6 +38,6 @@
     "type": "git",
     "url": "git://github.com/vagrant/Zurvives2.0.git"
   },
-  "author": "vagrant",
+  "author": "Thomas Maurer",
   "license": ""
 }
